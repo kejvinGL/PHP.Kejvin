@@ -1,12 +1,12 @@
 <?php
 switch ($_SERVER["REQUEST_URI"]) {
-    case '/loginpage/views/client.php':
+    case '/views/client.php':
         $footer = '<footer footer-center p-4 text-base-content bottom-0';
         break;
-    case '/loginpage/views/posts.php':
+    case '/views/posts.php':
         $footer = '<footer footer-center p-4 text-base-content bottom-0';
         break;
-    case '/loginpage/views/users.php':
+    case '/views/users.php':
         $footer = '<footer footer-center p-4 text-base-content bottom-0';
         break;
     default:

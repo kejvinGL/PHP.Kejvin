@@ -1,4 +1,3 @@
 <?php
-require "partials/header.php";
 isAdmin();
-include "partials/admin/sideNav.php";
+include "views/partials/admin/sideNav.php";

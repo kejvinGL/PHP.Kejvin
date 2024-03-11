@@ -1,8 +1,4 @@
 <?php
-session_start();
-
-require "../../methods/user.php";
-require "../../methods/errors.php";
 
 
 function handleRegister(): void
@@ -130,14 +126,14 @@ function setUserSession($user): void
 
 function redirectToRegister(): void
 {
-    header("Location: /loginpage/views/register.php");
+    header("Location: /views/register");
     exit();
 }
 
 
 function redirectToHome(): void
 {
-    header("Location: /loginpage/views/home.php");
+    header("Location: /views/");
     exit();
 }
 

@@ -1,12 +1,9 @@
-<?php
-require "partials/header.php";
-?>
 <div class="flex flex-col mt-14 errors_messages h-1/5 w-4/5 justify-end items-center">
     <?php
     if (!isset($_SESSION['tab'])) {
         $_SESSION['tab'] = 'avatar';
     }
-    echo showMessages() ?? null;
+    echo showMessage() ?? null;
     ?>
 </div>
 <div class="h-4/5 ">

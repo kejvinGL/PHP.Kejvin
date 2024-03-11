@@ -1,9 +1,6 @@
 <?php
-session_start();
-require "../../methods/user.php";
 isLoggedIn();
-require "../../methods/errors.php";
-require "../../methods/messages.php";
+
 
 function handleUserChange()
 {
@@ -67,7 +64,7 @@ function changeUser($username, $email, $new_username, $new_email)
             $_SESSION["username"] = $new_username;
         }
         $_SESSION["messages"] = $messages;
-        header("Location: /loginpage/views/users.php");
+        header("Location: /views/users.php");
     }
 }
 
@@ -75,7 +72,7 @@ function changeUser($username, $email, $new_username, $new_email)
 
 function redirectToUserList()
 {
-    header("Location: /loginpage/views/users.php");
+    header("Location: /views/users");
 }
 
 if (isset($_POST['edit'])) {

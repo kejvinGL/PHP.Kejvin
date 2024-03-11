@@ -1,18 +1,15 @@
 <?php
-session_start();
-
-require("../src/methods/user.php");
 if (isset($_SESSION["username"])) {
     switch (getCurrentUserRole()) {
         case 0:
-            header("Location: overall.php");
+            header("Location: overall");
             break;
         case 1:
-            header("Location: client.php");
+            header("Location: client");
             break;
         default:
-            header("Location: logout.php");
+            header("Location: logout");
     }
 } else {
-    header("Location: logout.php");
+    header("Location: logout");
 }

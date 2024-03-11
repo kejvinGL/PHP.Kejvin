@@ -7,12 +7,9 @@
             <p class="py-4"><span class="text-xs text-gray-400">By Deleting User you can not recover lost
                     data!<br><br></span> <span class="text-sm"> Enter your password to continue:</span></p>
             <div class="modal-action flex flex-col">
-                <form id="delete_form" class="inline-flex join" action="../src/requests/profile/deleteSelf.php"
-                    method="post">
-                    <input type="password" name="password" class="input input-bordered join-item w-full max-w-xs"
-                        id="enter_pass" oninput="enableDelete(this)" placeholder="********" />
-                    <input type="submit" name="submit" class="btn btn-outline join-item btn-error" id="deleteButton"
-                        value="Delete" disabled />
+                <form id="delete_form" class="inline-flex join" action="../src/requests/profile/deleteSelf" method="post">
+                    <input type="password" name="password" class="input input-bordered join-item w-full max-w-xs" id="enter_pass" oninput="enableDelete(this)" placeholder="********" />
+                    <input type="submit" name="submit" class="btn btn-outline join-item btn-error" id="deleteButton" value="Delete" disabled />
                 </form>
                 <form method="dialog">
                     <button class="btn">Close</button>

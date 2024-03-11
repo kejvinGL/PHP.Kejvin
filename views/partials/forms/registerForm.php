@@ -1,11 +1,9 @@
 <p class="text-center text-xl m-5">Register as User</p>
-<form id="register-form" action="/src/requests/auth/registerClient.php" method="post"
-      class="h-full flex flex-col justify-evenly max-w-[500px] w-full">
+<form id="register-form" action="/src/requests/auth/registerClient" method="post" class="h-full flex flex-col justify-evenly max-w-[500px] w-full">
     <div class="h-1/4">
         <label class="input input-bordered flex items-center gap-2 <?php echo empty($_SESSION["errors"]["fullname"]) ? "" : "input-error" ?>">
             <i class="fa-solid fa-id-card fa-sm"></i>
-            <input name="fullname" type="text" class="grow" placeholder="Full Name"
-                   value="<?php echo $_SESSION["input"]["fullname"] ?? "" ?>"/>
+            <input name="fullname" type="text" class="grow" placeholder="Full Name" value="<?php echo $_SESSION["input"]["fullname"] ?? "" ?>" />
         </label>
         <div class="label pt-0">
             <?php echo isset($_SESSION["errors"]["fullname"]) ? showErrors("fullname") : "" ?>
@@ -14,8 +12,7 @@
     <div class="h-1/4">
         <label class="input input-bordered flex items-center gap-2 <?php echo empty($_SESSION["errors"]["email"]) ? "" : "input-error" ?>">
             <i class="fa-solid fa-envelope"></i>
-            <input name="email" type="email" class="grow" placeholder="E-mail"
-                   value="<?php echo $_SESSION["input"]["email"] ?? "" ?>"/>
+            <input name="email" type="email" class="grow" placeholder="E-mail" value="<?php echo $_SESSION["input"]["email"] ?? "" ?>" />
         </label>
         <div class="label pt-0">
             <?php echo isset($_SESSION["errors"]["email"]) ? showErrors("email") : "" ?></div>
@@ -23,8 +20,7 @@
     <div class="h-1/4">
         <label class="input input-bordered flex items-center gap-2 <?php echo empty($_SESSION["errors"]["username"]) ? "" : "input-error" ?>">
             <i class="fa-solid fa-user"></i>
-            <input name="username" type="text" class="grow" placeholder="Username"
-                   value="<?php echo $_SESSION["input"]["username"] ?? "" ?>"/>
+            <input name="username" type="text" class="grow" placeholder="Username" value="<?php echo $_SESSION["input"]["username"] ?? "" ?>" />
         </label>
         <div class="label pt-0">
             <?php echo isset($_SESSION["errors"]["username"]) ? showErrors("username") : "" ?></div>
@@ -32,7 +28,7 @@
     <div class="h-1/4">
         <label class="input input-bordered flex items-center gap-2 <?php echo empty($_SESSION["errors"]["password"]) ? "" : "input-error" ?>">
             <i class="fa-solid fa-key"></i>
-            <input name="password" type="password" class="grow" placeholder="********"/>
+            <input name="password" type="password" class="grow" placeholder="********" />
         </label>
         <div class="label pt-0">
             <?php echo isset($_SESSION["errors"]["password"]) ? showErrors("password") : "" ?>

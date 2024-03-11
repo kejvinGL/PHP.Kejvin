@@ -1,8 +1,6 @@
 <?php
+isLoggedIn();
 
-session_start();
-require "../../methods/user.php";
-require "../../methods/errors.php";
 $username = $_SESSION['username'];
 $user_id = $_SESSION['user_id'];
 $email = $_SESSION['email'];
@@ -13,7 +11,7 @@ function handleSelfDelete()
     $user_id = $_SESSION['user_id'];
     $password = $_POST['password'];
 
-    if (checkFormReq()) {
+    if (checkFormReq($password)) {
         deleteSelfUser($user_id, $password);
     } else {
         redirectToProfile();
@@ -63,12 +61,12 @@ function unsetUserSession()
 
 function redirectToLogin()
 {
-    header("Location: /loginpage/views/login.php");
+    header("Location: /views/login");
 }
 
 function redirectToProfile()
 {
-    header("Location: /loginpage/views/profile.php");
+    header("Location: /views/profile");
 }
 
 if (isset($_POST['submit'])) {

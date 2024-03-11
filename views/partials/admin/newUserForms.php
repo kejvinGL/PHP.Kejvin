@@ -1,7 +1,7 @@
 <main class="w-full md:w-[calc(100%-256px)] md:ml-64 bg-base-200 min-h-screen transition-all main flex flex-col md:flex-row md:justify-evenly items-center active">
     <div class="bg-base-300 px-10 pb-5 min-w-[350px] lg:min-w-[400px] my-8 h-2/5 min-h-[360px]">
         <p class="text-center text-xl m-5">Create a new Admin</p>
-        <form id="admin-form" action="/loginpage/src/requests/auth/newUser.php" method="post" class="h-1/2 flex flex-col justify-evenly max-w-[500px] w-full">
+        <form id="admin-form" action="/src/requests/auth/newUser" method="post" class="h-1/2 flex flex-col justify-evenly max-w-[500px] w-full">
             <input type="hidden" name="role" value="admin">
             <div class="h-1/4">
                 <label class=" h-3/5 input input-bordered flex items-center gap-2 <?php echo empty($_SESSION["errors"]["admin"]["fullname"]) ? "" : "input-error" ?>">
@@ -47,7 +47,7 @@
 
     <div class="bg-base-300 px-10 pb-5 min-w-[350px] lg:min-w-[400px] h-2/5 min-h-[360px]">
         <p class=" text-center text-xl m-5">Create a new Client</p>
-        <form id="client-form" action="/loginpage/src/requests/auth/newUser.php" method="post" class="h-1/2 flex flex-col justify-evenly max-w-[500px] w-full">
+        <form id="client-form" action="/src/requests/auth/newUser" method="post" class="h-1/2 flex flex-col justify-evenly max-w-[500px] w-full">
             <input type="hidden" name="role" value="client">
             <div class="h-1/4">
                 <label class="h-3/5 input input-bordered flex items-center gap-2 <?php echo empty($_SESSION["errors"]["client"]["fullname"]) ? "" : "input-error" ?>">

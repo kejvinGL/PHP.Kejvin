@@ -1,4 +1,6 @@
 <?php
+isLoggedIn();
+
 
 function handlePostDelete()
 {
@@ -7,7 +9,7 @@ function handlePostDelete()
     require "db.php";
     $query = "DELETE FROM posts WHERE post_id = '$post_id'";
     if (mysqli_query($conn, $query)) {
-        header("Location: /loginpage/viewsdashboard.php");
+        header("Location: /viewsdashboard.php");
     } else {
         echo "Error: " . $query . "<br>" . mysqli_error($conn);
     }

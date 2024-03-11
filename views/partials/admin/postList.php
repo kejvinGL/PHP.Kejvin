@@ -24,7 +24,7 @@
                         <div class="flex items-center gap-0 justify-center">
                             <div class="avatar">
                                 <div class="mask mask-squircle size-6">
-                                    <img src="<?php echo getUserAvatarPath($post['user_id']) ?>" />
+                                    <img src="<?php echo getUserAvatarPath($post['user_id']) ?>">
                                 </div>
                             </div>
                         </div>
@@ -71,7 +71,7 @@
                                 <h3>Are you sure you want to delete this Post?</h3>
                                 <p class="text-xs text-gray-600">Press ESC to cancel</p>
                                 <div class="modal-action">
-                                    <form method="post" action="/src/requests/posts/deletePost.php" class="w-full">
+                                    <form method="post" action="/src/requests/posts/deletePost" class="w-full">
                                         <input type="hidden" name="post_id" value="<?php echo $post["post_id"] ?>">
                                         <div class="flex justify-center">
                                             <input type="submit" name="delete" class="btn btn-error btn-outline btn-md text-xs" value="Delete" />

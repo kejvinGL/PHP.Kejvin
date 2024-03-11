@@ -1,10 +1,6 @@
 <?php
-session_start();
-
-require "../../methods/user.php";
-require "../../methods/errors.php";
-require "../../methods/messages.php";
-
+isLoggedIn();
+isAdmin();
 
 function handleNewUser()
 {
@@ -105,7 +101,7 @@ function checkNewUser($fullname, $username, $email, $password, $role)
 
 function redirectToAccess()
 {
-    header("Location: /loginpage/views/access.php");
+    header("Location: /views/access");
 }
 
 

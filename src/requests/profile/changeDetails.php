@@ -1,10 +1,5 @@
 <?php
-session_start();
-require "../../methods/user.php";
 isLoggedIn();
-require "../../methods/errors.php";
-require "../../methods/messages.php";
-
 
 function handleDetailsChange(): void
 {
@@ -91,7 +86,7 @@ function changeDetails($username, $email, $new_username, $new_email): void
 
 function redirectToProfile(): void
 {
-    header("Location: /loginpage/views/profile.php");
+    header("Location: /views/");
 }
 
 if (isset($_POST["submit"])) {

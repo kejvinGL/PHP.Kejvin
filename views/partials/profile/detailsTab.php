@@ -2,7 +2,7 @@
 <div role="tabpanel" class="tab-content bg-base-100 border-base-300 rounded-box w-[450px] h-[350px]">
     <div class="flex flex-col items-center justify-evenly mx-auto h-3/4 w-[350px]">
         <!--  -->
-        <form class="flex flex-col justify-between pt-8 h-3/4 w-full" name="details_change" id="details_change" action="/loginpage/src/requests/profile/changeDetails.php" method="post">
+        <form class="flex flex-col justify-between pt-8 h-3/4 w-full" name="details_change" id="details_change" action="/src/requests/profile/changeDetails" method="post">
             <div class="h-1/2 w-full">
                 <label class="input input-bordered <?php echo empty($_SESSION["errors"]["details"]["username"]) ? "" : "input-error" ?> flex items-center gap-2">
                     <i class="fa-solid fa-user"></i>

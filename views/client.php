@@ -1,5 +1,4 @@
 <?php
-require "partials/header.php";
 isClient();
 
 include "partials/client/postAdd.php";

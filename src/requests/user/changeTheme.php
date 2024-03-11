@@ -1,5 +1,7 @@
 <?php
-session_start();
+isLoggedIn();
+
+
 $_SESSION["darkmode"] = !$_SESSION["darkmode"];
 $back =  $_SERVER["HTTP_REFERER"];
 

@@ -1,9 +1,5 @@
 <?php
-session_start();
-require "../../methods/user.php";
 isLoggedIn();
-require "../../methods/errors.php";
-require "../../methods/messages.php";
 
 function handlePasswordChange()
 {
@@ -76,7 +72,7 @@ function changePassword($new_tried, $username)
 
 function redirectToProfile()
 {
-    header("Location: /loginpage/views/profile.php");
+    header("Location: /views/profile");
 }
 
 if (isset($_POST['submit'])) {

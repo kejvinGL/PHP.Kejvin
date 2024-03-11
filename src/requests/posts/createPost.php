@@ -1,5 +1,6 @@
 <?php
 session_start();
+isLoggedIn();
 
 function handlePostCreate()
 {
@@ -10,7 +11,7 @@ function handlePostCreate()
     require "db.php";
     $query = "INSERT INTO posts (title, body, user_id) VALUES ('$title','$body', $user_id)";
     if (mysqli_query($conn, $query)) {
-        header("Location: /loginpage/views/dashboard.php");
+        header("Location: /views/dashboard.php");
     } else {
     }
 }

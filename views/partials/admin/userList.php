@@ -77,7 +77,7 @@
                                 <h3><span class="text-red-500">WARNING! </span>Editing User Information</h3>
                                 <p class="text-xs text-gray-600">Press ESC to cancel</p>
                                 <div class="modal-action">
-                                    <form method="post" action="/src/requests/user/changeUser.php" id="edit_user" class="w-full">
+                                    <form method="post" action="/src/requests/user/changeUser" id="edit_user" class="w-full">
                                         <input type="hidden" name="user_id" value="<?php echo $user["user_id"] ?>">
                                         <input type="hidden" name="username" value="<?php echo $user["username"] ?>">
                                         <input type="hidden" name="email" value="<?php echo $user["email"] ?>">
@@ -108,7 +108,7 @@
                                     <?php echo $user["fullname"] . " (@" . $user["username"] . ")" ?></h3>
                                 <p class="text-xs text-gray-600">Press ESC to cancel</p>
                                 <div class="modal-action flex flex-col">
-                                    <form id="delete_form" class="inline-flex join" action="/src/requests/user/deleteUser.php" method="post">
+                                    <form id="delete_form" class="inline-flex join" action="/src/requests/user/deleteUser" method="post">
                                         <input type="hidden" name="user_id" value="<?php echo $user["user_id"] ?>">
                                         <input type="password" name="password" class="input input-bordered join-item w-full max-w-xs" id="enter_pass" oninput="enableDelete(this)" placeholder="********" />
                                         <input type="submit" name="delete" class="btn btn-outline join-item btn-error" id="deleteButton" value="Delete" disabled />

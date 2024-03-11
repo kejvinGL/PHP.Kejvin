@@ -1,9 +1,6 @@
 <?php
-session_start();
-require "../../methods/user.php";
 isLoggedIn();
-require "../../methods/errors.php";
-require "../../methods/messages.php";
+isAdmin();
 
 $errors = array();
 $errors["changes"] = array();
@@ -53,7 +50,7 @@ function checkDeleteUser($user_id, $password)
 
 function redirectToUserList()
 {
-    header("Location: /loginpage/views/users.php");
+    header("Location: /views/users.php");
 }
 
 if (isset($_POST['delete'])) {

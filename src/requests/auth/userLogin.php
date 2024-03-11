@@ -1,7 +1,4 @@
 <?php
-session_start();
-require "../../methods/errors.php";
-require "../../methods/user.php";
 
 
 /**
@@ -13,7 +10,7 @@ function handleLogin()
 {
     $username = $_POST["username"];
     $password = $_POST["password"];
-    checkFormReq();
+    checkFormReq($username, $password);
     checkLogin($username, $password);
 }
 
@@ -140,7 +137,7 @@ function redirectToHome()
 {
     unset($_SESSION["input"]);
     unset($_SESSION["errors"]);
-    header("Location: /loginpage/views/home.php");
+    header("Location: /views/");
     exit();
 }
 
@@ -151,7 +148,7 @@ function redirectToHome()
  */
 function redirectToLogin()
 {
-    header("Location: /loginpage/views/login.php");
+    header("Location: /views/login");
     exit();
 }
 

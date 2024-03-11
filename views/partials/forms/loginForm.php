@@ -2,7 +2,7 @@
     <p class="flex items-center justify-center">Login
     </p>
 </div>
-<form id="login-form" action="../src/requests/auth/userLogin.php" method="post" class="h-[45%] flex flex-col justify-evenly max-w-[500px] w-full">
+<form id="login-form" action="../src/requests/auth/userLogin" method="post" class="h-[45%] flex flex-col justify-evenly max-w-[500px] w-full">
     <div class="h-1/2">
         <label class="input input-bordered flex items-center gap-2 <?php echo empty($_SESSION["errors"]["username"]) ? "" : "input-error" ?>">
             <i class="fa-solid fa-user"></i>
@@ -22,5 +22,5 @@
 <div class="flex justify-evenly">
     <input type="submit" class="btn w-5/12" name="submit" form="login-form" value="Login">
     <div class="divider divider-horizontal">OR</div>
-    <a class="btn w-5/12" href="/loginpage/views/register.php">Register</a>
+    <a class="btn w-5/12" href="/views/register.php">Register</a>
 </div>

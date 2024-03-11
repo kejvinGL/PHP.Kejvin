@@ -1,9 +1,6 @@
 <?php
-session_start();
-require "../../methods/user.php";
-require "../../methods/errors.php";
-require "../../methods/messages.php";
 isLoggedIn();
+
 function handleAvatarChange()
 {
     $_SESSION['tab'] = "avatar";
@@ -72,7 +69,7 @@ function changeAvatar($user_id, $username, $file_ext, $file_size, $messages)
 
 function redirectToProfile()
 {
-    header("Location: /loginpage/views/profile.php");
+    header("Location: /views/profile");
 }
 
 if (isset($_FILES)) {

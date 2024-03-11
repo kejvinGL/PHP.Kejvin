@@ -172,13 +172,13 @@ function getUserByEmail(string $email): array|false
 function isLoggedIn(): void
 {
     if (isset($_SESSION['user_id']) && getCurrentUser()) {
-        if ($_SERVER['PHP_SELF'] == '/loginpage/views/login.php' || $_SERVER['PHP_SELF'] == '/loginpage/views/register.php') {
-            header("Location/loginpage/views/home.php");
+        if ($_SERVER['PHP_SELF'] == '/views/login.php' || $_SERVER['PHP_SELF'] == '/views/register.php') {
+            header("Location: /views/");
             exit;
         }
     } else {
-        if ($_SERVER['PHP_SELF'] != '/loginpage/views/login.php' && $_SERVER['PHP_SELF'] != '/loginpage/views/register.php') {
-            header("Location: /loginpage/views/login.php");
+        if ($_SERVER['PHP_SELF'] != '/views/login.php' && $_SERVER['PHP_SELF'] != '/views/register.php') {
+            header("Location: /views/login.php");
             exit;
         }
     }
@@ -194,7 +194,7 @@ function isAdmin(): void
 {
     if (getCurrentUserRole() != 0) {
         session_unset();
-        header("Location: /loginpage/views/home.php");
+        header("Location: /views/");
     }
 }
 
@@ -207,7 +207,7 @@ function isAdmin(): void
 function isClient(): void
 {
     if (getCurrentUserRole() != 1) {
-        header("Location: /loginpage/views/home.php");
+        header("Location: /views/");
     }
 }
 
@@ -266,7 +266,7 @@ function getUserAvatarPath(int $id): string
     require "db.php";
     $stmt = $pdo->prepare("SELECT * FROM media WHERE user_id = ? AND type='avatar'");
     $stmt->execute([$id]);
-    $row = $stmt->fetchColumn();
+    $row = $stmt->fetch();
     return $row ? "/loginpage/src/assets/media/" . $row["path"] : "/loginpage/src/assets/media/default/default.svg";
 }
 

@@ -11,7 +11,6 @@ function handleRegister(): void
     $email = $_POST["email"];
     $username = $_POST["username"];
     $password = $_POST["password"];
-    global $errors;
 
     if (checkFormReq($fullname, $username, $email, $password));
     checkRegister($fullname, $username, $email, $password);
@@ -25,14 +24,7 @@ function checkFormReq($fullname, $username, $email, $password)
     $errors["email"] = array();
     $errors["password"] = array();
     $errors["check"] = true;
-    if ((!preg_match('/^[a-zA-Z ]+$/', $fullname))) {
-        $errors["fullname"][] = "Full name not valid";
-        $errors["check"] = false;
-    }
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors["email"][] = "Email not valid";
-        $errors["check"] = false;
-    }
+
     if (empty($username)) {
         $errors["username"][] = "Username cannot be empty.";
         $errors["check"] = false;
@@ -49,14 +41,20 @@ function checkFormReq($fullname, $username, $email, $password)
         $errors["email"][] = "Email cannot be empty.";
         $errors["check"] = false;
     }
+    if ((!preg_match('/^[a-zA-Z ]+$/', $fullname))) {
+        $errors["fullname"][] = "Full name not valid";
+        $errors["check"] = false;
+    }
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors["email"][] = "Email not valid";
+        $errors["check"] = false;
+    }
     if (strlen($password) < 8) {
         $errors["password"][] = "Password must be at least 8 characters long";
         $errors["check"] = false;
     }
     if (!$errors["check"]) {
         addErrors($errors);
-    }
-    if (!$errors["check"]) {
         handleErrorReport($errors);
     }
 }

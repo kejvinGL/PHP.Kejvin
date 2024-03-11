@@ -15,7 +15,7 @@ function handleNewUser()
     $role = $_POST["role"];
 
 
-    if (checkFormReq($email, $password, $role)) {
+    if (checkFormReq($fullname, $username, $email, $password, $role)) {
         checkNewUser($fullname, $username, $email, $password, $role);
     } else {
         redirectToAccess();
@@ -43,7 +43,6 @@ function checkFormReq($fullname, $username, $email, $password, $role)
         $errors["check"] = false;
     }
 
-
     //Email
     if (empty($email)) {
         array_push($errors[$role]["email"], "Email cannot be empty.");
@@ -51,8 +50,8 @@ function checkFormReq($fullname, $username, $email, $password, $role)
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         array_push($errors[$role]["email"], "Email not valid");
         $errors["check"] = false;
-    } elseif (verifyEmailUnique($email)) {
-        array_push($errors, "Email already taken.");
+    } elseif (!verifyEmailUnique($username, [])) {
+        array_push($errors[$role]["email"], "Email already taken.");
         $errors["check"] = false;
     }
 
@@ -61,8 +60,8 @@ function checkFormReq($fullname, $username, $email, $password, $role)
     if (empty($username)) {
         array_push($errors[$role]["username"], "Username cannot be empty.");
         $errors["check"] = false;
-    } elseif (verifyUsernameUnique($username)) {
-        array_push($errors, "Username already taken.");
+    } elseif (!verifyUsernameUnique($username, [])) {
+        array_push($errors[$role]["username"], "Username already taken.");
         $errors["check"] = false;
     }
 
@@ -80,7 +79,6 @@ function checkFormReq($fullname, $username, $email, $password, $role)
         addErrors($errors);
     }
 
-
     return $errors["check"];
 }
 
@@ -96,14 +94,18 @@ function checkNewUser($fullname, $username, $email, $password, $role)
     }
 
     $user = getUserByUsername($username);
-    mkdir(dirname(__DIR__, 3) . "/assets/media/" . $user['user_id']);
+    mkdir(dirname(__DIR__, 2) . "/assets/media/" . $user['user_id']);
+    $messages = array();
+    $messages["admin"] = array();
+    array_push($messages["admin"], "New " . ucfirst($role) . " created");
+    addMessages($messages);
     redirectToAccess();
 }
 
 
 function redirectToAccess()
 {
-    header("Location: /loginpage/views/admin/access.php");
+    header("Location: /loginpage/views/access.php");
 }
 
 

@@ -67,7 +67,7 @@ function changeUser($username, $email, $new_username, $new_email)
             $_SESSION["username"] = $new_username;
         }
         $_SESSION["messages"] = $messages;
-        header("Location: /loginpage/views/admin/users.php");
+        header("Location: /loginpage/views/users.php");
     }
 }
 
@@ -75,7 +75,7 @@ function changeUser($username, $email, $new_username, $new_email)
 
 function redirectToUserList()
 {
-    header("Location: /loginpage/views/admin/users.php");
+    header("Location: /loginpage/views/users.php");
 }
 
 if (isset($_POST['edit'])) {

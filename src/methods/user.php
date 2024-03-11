@@ -379,13 +379,14 @@ function getUsers(): array|null
 function verifyUsernameUnique(string $username, array  $ignore = []): bool
 {
     require "db.php";
-    $idCount = "";
-    for ($i = 0; $i < count($ignore); $i++) {
-        $idCount = $idCount . "?,";
+    if (empty($ignore)) {
+        $inQuery = "?";
+    } else {
+        $inQuery = str_repeat('?,', count($ignore) - 1) . '?';
     }
-    $idCount = substr($idCount, 0, -1);
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ? AND user_id NOT IN (?)");
-    $stmt->execute([$username, $idCount]);
+
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ? AND user_id NOT IN ($inQuery)");
+    $stmt->execute([$username, $inQuery]);
     return $stmt->rowCount() == 0;
 }
 
@@ -400,12 +401,16 @@ function verifyUsernameUnique(string $username, array  $ignore = []): bool
 function verifyEmailUnique(string $email, array $ignore = []): bool
 {
     require "db.php";
-
-    $inQuery = str_repeat('?,', count($ignore) - 1) . '?';
+    if (empty($ignore)) {
+        $inQuery = "?";
+    } else {
+        $inQuery = str_repeat('?,', count($ignore) - 1) . '?';
+    }
 
     $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ? AND user_id NOT IN ($inQuery)");
-    $param = array_merge([$email], $ignore);
+    $param = array_merge([$email, $inQuery]);
     $stmt->execute($param);
+    echo $stmt->rowCount();
     return $stmt->rowCount() == 0;
 }
 

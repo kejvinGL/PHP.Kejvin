@@ -13,7 +13,7 @@ function handleUserDelete()
     $user_id = $_SESSION['user_id'];
     $password = $_POST['password'];
 
-    if (checkFormReq()) {
+    if (checkFormReq($password)) {
         checkDeleteUser($user_id, $password);
     } else {
         redirectToProfile();
@@ -53,7 +53,7 @@ function checkDeleteUser($user_id, $password)
 
 function redirectToUserList()
 {
-    header("Location: /loginpage/views/admin/users.php");
+    header("Location: /loginpage/views/users.php");
 }
 
 if (isset($_POST['delete'])) {

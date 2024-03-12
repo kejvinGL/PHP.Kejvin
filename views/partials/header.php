@@ -1,12 +1,11 @@
 <?php
 session_start();
 
-require("src/methods/user.php");
-require("src/methods/errors.php");
-require("src/methods/messages.php");
-require("src/methods/post.php");
-isLoggedIn();
-
+require("methods/user.php");
+require("methods/errors.php");
+require("methods/messages.php");
+require("methods/post.php");
+require("methods/navigation.php");
 $title = "Kejvin.PHP | Login";
 switch ($_SERVER["REQUEST_URI"]) {
   case "/views/register":
@@ -28,18 +27,31 @@ switch ($_SERVER["REQUEST_URI"]) {
     $title = "Kejvin.PHP | Profile";
     break;
 }
+?>
 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/assets/styles/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.7.2/dist/full.min.css" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!DOCTYPE html>
+  <html lang="en" data-theme='<?php if (!isset($_SESSION['darkmode'])) $_SESSION['darkmode'] = true;
+                              echo $_SESSION['darkmode'] ? "black" : "retro" ?>'>
+  <title> <?php echo $title ?> </title>
+</head>
 
-include "head.php";
+<?php
 include "navbar.php";
 switch ($_SERVER["REQUEST_URI"]) {
-  case '/views/client':
+  case '/client':
     $body = '<body class="overflow-y-auto h-max">';
     break;
-  case '/views/users':
+  case '/users':
     $body = '<body class="overflow-y-auto h-max">';
     break;
-  case '/views/posts':
+  case '/posts':
     $body = '<body class="overflow-y-auto h-max">';
     break;
   default:

@@ -1,4 +1,5 @@
 <?php
+
 require 'views/partials/header.php';
 
 $uri = parse_url($_SERVER['REQUEST_URI'])["path"];
@@ -7,35 +8,38 @@ $uri = parse_url($_SERVER['REQUEST_URI'])["path"];
 
 $routes = [
 
-
     // VIEWS
-    "/" => "views/home.php",
-    "/views/" => "views/home.php",
-    "/views/login" => "views/login.php",
-    "/views/logout" => "views/logout.php",
-    "/views/register" => "views/register.php",
-    "/views/users" => "views/users.php",
-    "/views/overall" => "views/overall.php",
-    "/views/access" => "views/access.php",
-    "/views/posts" => "views/posts.php",
-    "/views/profile" => "views/profile.php",
+    "/" => "controllers/home.php",
+    "/home" => "controllers/home.php",
+    "/login" => "controllers/login.php",
+    "/logout" => "controllers/logout.php",
+    "/register" => "controllers/register.php",
+
+    "/users" => "controllers/users.php",
+    "/overall" => "controllers/overall.php",
+    "/access" => "controllers/access.php",
+    "/posts" => "controllers/posts.php",
+
+    "/client" => "controllers/client.php",
+
+    "/profile" => "controllers/profile.php",
 
     // REQUESTS
-    "/src/requests/auth/newUser" => "src/requests/auth/newUser.php",
-    "/src/requests/auth/registerClient" => "src/requests/auth/registerClient.php",
-    "/src/requests/auth/userLogin" => "src/requests/auth/userLogin.php",
+    "/auth/userCreate" => "controllers/auth/userCreate.php",
+    "/auth/registerClient" => "controllers/auth/clientRegister.php",
+    "/auth/userLogin" => "controllers/auth/userLogin.php",
 
-    "/src/requests/posts/createPost" => "src/requests/posts/createPost.php",
-    "/src/requests/posts/deletePost" => "src/requests/posts/deletePost.php",
+    "/posts/createPost" => "controllers/posts/createPost.php",
+    "/posts/deletePost" => "controllers/posts/deletePost.php",
 
-    "/src/requests/profile/changeAvatar" => "src/requests/profile/changeAvatar.php",
-    "/src/requests/profile/changeDetails" => "src/requests/profile/changeDetails.php",
-    "/src/requests/profile/changePassword" => "src/requests/profile/changePassword.php",
-    "/src/requests/profile/deleteSelf" => "src/requests/profile/deleteSelf.php",
+    "/profile/changeAvatar" => "controllers/profile/changeAvatar.php",
+    "/profile/changeDetails" => "controllers/profile/changeDetails.php",
+    "/profile/changePassword" => "controllers/profile/changePassword.php",
+    "/profile/deleteSelf" => "controllers/profile/deleteSelf.php",
 
-    "/src/requests/user/changeTheme" => "src/requests/user/changeTheme.php",
-    "/src/requests/user/changeUser" => "src/requests/user/changeUser.php",
-    "/src/requests/user/deleteUser" => "src/requests/user/deleteUser.php"
+    "/user/changeTheme" => "controllers/user/changeTheme.php",
+    "/user/changeUser" => "controllers/user/changeUser.php",
+    "/user/deleteUser" => "controllers/user/deleteUser.php"
 
 
 ];

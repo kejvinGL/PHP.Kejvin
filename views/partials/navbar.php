@@ -21,17 +21,16 @@ switch ($_SERVER["REQUEST_URI"]) {
 
         <div class="flex-1">
 
-            <?php if (getCurrentUserRole() == 0 && $_SERVER["REQUEST_URI"] != "/views/profile") { ?>
-
+            <?php if (getCurrentUserRole() === 0 && $_SERVER["REQUEST_URI"] != "/views/profile") { ?>
                 <button type="button" class="text-lg text-neutral-400 size-10 btn btn-ghost sidebar-toggle">
                     <i class="fa-solid fa-bars"></i>
                 </button>
 
             <?php } ?>
 
-            <a class="btn btn-ghost text-xl pl-1 pr-0" href="/views/">PHP.Kejvin</a>
+            <a class="btn btn-ghost text-xl pl-1 pr-0" href="/">PHP.Kejvin</a>
             <span class="text-3xl px-2">/</span>
-            <a class="btn-ghost text-neutral-500" href="/views/profile"><?php echo $_SESSION["username"] ?? null ?></a>
+            <a class="btn-ghost text-neutral-500" href="/profile"><?php echo $_SESSION["username"] ?? null ?></a>
         </div>
         <div class="dropdown dropdown-end">
             <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar mx-4 flex">
@@ -40,17 +39,17 @@ switch ($_SERVER["REQUEST_URI"]) {
                 </div>
             </div>
             <ul tabindex="0" class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
-                <li><a href="/views/profile">Profile</a></li>
-                <li><a href="/views/logout.php">Logout</a></li>
+                <li><a href="/profile">Profile</a></li>
+                <li><a href="/logout">Logout</a></li>
             </ul>
         </div>
-        <a class="size-5" href="/src/requests/user/changeTheme">
+        <a class="size-5" href="/controllers/user/changeTheme">
             <i class="fa-solid fa-lightbulb fa-lg"></i></a>
     <?php } else { ?>
         <div class="flex-1">
             <a class="btn btn-ghost text-xl" href="<?php $_SERVER["REQUEST_URI"] ?>">PHP.Kejvin</a>
         </div>
-        <a class="size-4" href="../src/requests/user/changeTheme">
+        <a class="size-4" href="/user/changeTheme">
             <i class="fa-solid fa-lightbulb fa-lg"></i>
         </a>
     <?php } ?>

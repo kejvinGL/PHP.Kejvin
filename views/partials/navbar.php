@@ -1,12 +1,12 @@
 <?php
 switch ($_SERVER["REQUEST_URI"]) {
-    case '/views/client.php':
+    case '/home':
         $sticky = 'sticky';
         break;
-    case '/views/users.php':
+    case '/users':
         $sticky = 'sticky';
         break;
-    case '/views/posts.php':
+    case '/posts':
         $sticky = 'sticky';
         break;
     default:
@@ -28,7 +28,7 @@ switch ($_SERVER["REQUEST_URI"]) {
 
             <?php } ?>
 
-            <a class="btn btn-ghost text-xl pl-1 pr-0" href="/">PHP.Kejvin</a>
+            <a class="btn btn-ghost text-xl pl-1 pr-0" href="/home">PHP.Kejvin</a>
             <span class="text-3xl px-2">/</span>
             <a class="btn-ghost text-neutral-500" href="/profile"><?php echo $_SESSION["username"] ?? null ?></a>
         </div>
@@ -40,17 +40,26 @@ switch ($_SERVER["REQUEST_URI"]) {
             </div>
             <ul tabindex="0" class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
                 <li><a href="/profile">Profile</a></li>
-                <li><a href="/logout">Logout</a></li>
+                <li><a href="/auth/logout">Logout</a></li>
             </ul>
         </div>
-        <a class="size-5" href="/controllers/user/changeTheme">
-            <i class="fa-solid fa-lightbulb fa-lg"></i></a>
+        <form class="m-0 size-10 " action="user/changeTheme" method="POST">
+            <input type="hidden" name="_method" value="PUT">
+            <label class="size-10 cursor-pointer">
+                <i class="fa-solid fa-lightbulb fa-xl"></i>
+                <input type="submit" value="">
+            </label>
+        </form>
     <?php } else { ?>
         <div class="flex-1">
             <a class="btn btn-ghost text-xl" href="<?php $_SERVER["REQUEST_URI"] ?>">PHP.Kejvin</a>
         </div>
-        <a class="size-4" href="/user/changeTheme">
-            <i class="fa-solid fa-lightbulb fa-lg"></i>
-        </a>
+        <form class="m-0 size-10 " action="user/changeTheme" method="POST">
+            <input type="hidden" name="_method" value="PUT">
+            <label class="size-10 cursor-pointer">
+                <i class="fa-solid fa-lightbulb fa-lg"></i>
+                <input type="submit" value="">
+            </label>
+        </form>
     <?php } ?>
 </div>

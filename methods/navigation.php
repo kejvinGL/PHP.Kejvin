@@ -1,7 +1,13 @@
 <?php
+
+function basePath($path): string
+{
+    return BASE_PATH . $path;
+}
+
 function redirectToHome()
 {
-    header("Location: /");
+    header("Location: /home");
     exit();
 }
 
@@ -13,11 +19,6 @@ function redirectToLogin()
 }
 
 
-function redirectToLogout()
-{
-    header("Location: /logout");
-    exit();
-}
 
 
 function redirectToRegister()
@@ -55,16 +56,6 @@ function redirectToPosts()
     header("Location: /posts");
     exit();
 }
-
-
-
-
-function redirectToClient()
-{
-    header("Location: /client");
-    exit();
-}
-
 
 
 

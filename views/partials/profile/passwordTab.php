@@ -3,6 +3,7 @@
     <div class="flex flex-col items-center justify-evenly mx-auto h-4/5 w-[350px]">
         <!--  -->
         <form class="flex flex-col justify-between pt-8 h-[250px] items-center w-full" name="password_change" id="password_change" action="/profile/changePassword" method="post">
+            <input type="hidden" name="_method" value="PUT">
             <div class="h-1/3 w-full">
                 <input name="current_password" type="password" class="input input-bordered w-full <?php echo empty($_SESSION["errors"]["password"]["current"]) ? "" : "input-error" ?>" placeholder="Current Password" />
                 <div class="label pt-0">

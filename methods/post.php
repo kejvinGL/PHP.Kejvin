@@ -66,6 +66,14 @@ function getPosts()
 }
 
 
+function getPostByID($id)
+{
+    require "db.php";
+    $stmt = $pdo->prepare("SELECT * FROM posts WHERE post_id = ?;");
+    $stmt->execute([$id]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
 /**
  * Retrieves the posts of the current user.
  *

@@ -1,5 +1,5 @@
 <div class=" h-1/5">
-    <?= isset($_SESSION["errors"]["user"]) ? showErrors('user') : null ?>
+    <?php echo isset($_SESSION["errors"]["user"]) ? showErrors('user') : null ?>
 </div>
 <div class="h-4/5 w-1/2">
     <div class="flex flex-col items-center justify-between w-full h-[420px]">
@@ -7,7 +7,7 @@
             <p class="flex items-center justify-center">Login
             </p>
         </div>
-        <form id="login-form" action="/auth/userLogin" method="post" class="h-[45%] flex flex-col justify-evenly max-w-[500px] w-full">
+        <form id="login-form" action="/auth/userLogin" method="GET" class="h-[45%] flex flex-col justify-evenly max-w-[500px] w-full">
             <div class="h-1/2">
                 <label class="input input-bordered flex items-center gap-2 <?php echo empty($_SESSION["errors"]["username"]) ? "" : "input-error" ?>">
                     <i class="fa-solid fa-user"></i>

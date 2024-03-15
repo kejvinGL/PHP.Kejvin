@@ -69,7 +69,7 @@ function deleteUser(int $id): bool
     //Delete Media
     $stmt = $pdo->prepare("DELETE FROM media WHERE user_id = ?");
     $stmt->execute([$id]);
-    $folderPath = dirname(__DIR__) . "/assets/media/" . $id;
+    $folderPath = basePath("/assets/media/") . $id;
     if (is_dir($folderPath)) {
         array_map('unlink', glob($folderPath . '/*'));
         rmdir($folderPath);
@@ -111,7 +111,7 @@ function deleteUserAvatar(int $id): bool
 function getCurrentUser(): array | bool
 {
     require "db.php";
-    $username = $_SESSION['username'];
+    $username = $_SESSION['username'] ?? "null";
     $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
     $stmt->execute([$username]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -173,12 +173,12 @@ function isLoggedIn(): void
 {
     if (isset($_SESSION['user_id']) && getCurrentUser()) {
         if ($_SERVER['REQUEST_URI'] == '/login' || $_SERVER['REQUEST_URI'] == '/register') {
-            header("Location: /home");
+            redirectToHome();
             exit;
         }
     } else {
         if ($_SERVER['REQUEST_URI'] != '/login' && $_SERVER['REQUEST_URI'] != '/register') {
-            header("Location: /logout");
+            redirectToLogin();
             exit;
         }
     }
@@ -192,9 +192,9 @@ function isLoggedIn(): void
  */
 function isAdmin(): void
 {
-    if (getCurrentUserRole() != 0) {
+    if (getCurrentUserRole() !== 0) {
         session_unset();
-        header("Location: /home");
+        redirectToLogin();
     }
 }
 
@@ -206,8 +206,8 @@ function isAdmin(): void
  */
 function isClient(): void
 {
-    if (getCurrentUserRole() != 1) {
-        header("Location: /home");
+    if (getCurrentUserRole() !== 1) {
+        redirectToOverall();
     }
 }
 
@@ -296,7 +296,7 @@ function getCurrentUserRole(): int | null
 {
     require "db.php";
     $user = getCurrentUser();
-    return $user['role_id'];
+    return $user['role_id'] ?? null;
 }
 
 
@@ -422,6 +422,23 @@ function verifyEmailUnique(string $email, array $ignore = []): bool
  *
  */
 
+
+function setUserSession($user): void
+{
+    $_SESSION['user_id'] = $user['user_id'];
+    $_SESSION['username'] = $user['username'];
+    $_SESSION['email'] = $user['email'];
+    $_SESSION['darkmode'] = $user['darkmode'];
+}
+
+function unsetUserSession($user): void
+{
+    unset($_SESSION['user_id']);
+    unset($_SESSION['username']);
+    unset($_SESSION['email']);
+    unset($_SESSION['darkmode']);
+}
+
 /**
  * Sets the avatar for a user.
  *
@@ -468,8 +485,8 @@ function setDetails(string $username, string $email, string $new_username, strin
 function setPassword(string $new, int $id): bool
 {
     require "db.php";
-    $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE username = ?");
-    return $stmt->execute([$new_password, $id]);
+    $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE user_id= ?");
+    return $stmt->execute([$new, $id]);;
 }
 
 

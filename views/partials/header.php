@@ -8,19 +8,19 @@ require("methods/post.php");
 require("methods/navigation.php");
 $title = "Kejvin.PHP | Login";
 switch ($_SERVER["REQUEST_URI"]) {
-  case "/views/register":
+  case "/register":
     $title = "Kejvin.PHP | Register";
     break;
-  case "/views/overall":
+  case "/overall":
     $title = "Kejvin.PHP | Admin Dashboard";
     break;
-  case "/views/users":
+  case "/users":
     $title = "Kejvin.PHP | All Users";
     break;
-  case "/views/access":
+  case "/access":
     $title = "Kejvin.PHP | Create New User";
     break;
-  case "/views/posts":
+  case "/posts":
     $title = "Kejvin.PHP | All Posts";
     break;
   case "/profile":

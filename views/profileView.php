@@ -17,3 +17,4 @@
     <div class="divider"></div>
     <?php include 'partials/profile/deleteTab.php' ?>
 </div>
+<script src="assets/js/enableInput.js"></script>

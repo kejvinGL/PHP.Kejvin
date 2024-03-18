@@ -1,6 +1,10 @@
 <?php
+
+namespace Router;
+
 class Router
 {
+
     private $routes = [];
 
     public function add($method, $uri, $controller)
@@ -12,38 +16,38 @@ class Router
         ];
     }
 
+
     public function post($uri, $controller)
     {
         $this->add('POST', $uri, $controller);
     }
+
 
     public function get($uri, $controller)
     {
         $this->add('GET', $uri, $controller);
     }
 
-    public function update($uri, $controller)
+
+    public function put($uri, $controller)
     {
         $this->add('PUT', $uri, $controller);
     }
+
 
     public function delete($uri, $controller)
     {
         $this->add('DELETE', $uri, $controller);
     }
 
+
     public function route($uri, $method)
     {
 
         foreach ($this->routes as $route) {
             if ($this->uriValidator($uri, $method, $route['uri'], $route['method'])) {
-                if (is_callable($route['controller'])) {
-                    $routeParams = $this->extractRouteParams($uri, $route['uri']);
-                    $route['controller']($routeParams);
-                    return;
-                } else {
-                    require basePath($route['controller']);
-                }
+                $routeParams = $this->extractRouteParams($uri, $route['uri']);
+                $route['controller']($routeParams);
                 return;
             }
         }
@@ -52,6 +56,8 @@ class Router
         echo "Route not found for URI: $uri and Method: $method";
         die();
     }
+
+
 
     private function uriValidator($uri, $uriMethod, $routeUri, $routeMethod)
     {
@@ -67,6 +73,7 @@ class Router
         }
         return $routeUriWithoutParams === $uriWithoutParams && $routeMethod === $uriMethod;
     }
+
 
     private function extractRouteParams($uri, $routeUri)
     {

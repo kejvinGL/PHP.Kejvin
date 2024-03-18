@@ -21,14 +21,14 @@ switch ($_SERVER["REQUEST_URI"]) {
 
         <div class="flex-1">
 
-            <?php if (getCurrentUserRole() === 0 && $_SERVER["REQUEST_URI"] != "/views/profile") { ?>
+            <?php if (getCurrentUserRole() === 0 && $_SERVER["REQUEST_URI"] != "/profile") { ?>
                 <button type="button" class="text-lg text-neutral-400 size-10 btn btn-ghost sidebar-toggle">
                     <i class="fa-solid fa-bars"></i>
                 </button>
 
             <?php } ?>
 
-            <a class="btn btn-ghost text-xl pl-1 pr-0" href="/home">PHP.Kejvin</a>
+            <a class="btn btn-ghost text-xl pl-1 pr-0" href="/">PHP.Kejvin</a>
             <span class="text-3xl px-2">/</span>
             <a class="btn-ghost text-neutral-500" href="/profile"><?php echo $_SESSION["username"] ?? null ?></a>
         </div>

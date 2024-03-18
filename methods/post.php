@@ -8,12 +8,21 @@ function createPost($id, $title, $body)
 }
 
 
-function deletePost($id)
+function deletePost($id): bool
 {
     require "db.php";
-    $stmt = $pdo->prepare("DELETE FROM posts WHERE post_id = ?");
+    $stmt = $pdo->prepare("SELECT * FROM posts WHERE post_id = ?");
     $stmt->execute([$id]);
+    if ($stmt->rowCount() === 0) {
+        return false;
+    }
+    $stmt = $pdo->prepare("DELETE FROM posts WHERE post_id = ?");
+    $result = $stmt->execute([$id]);
+    return $result ? true : false;
 }
+
+
+
 
 /**
  *
@@ -28,6 +37,14 @@ function totalPosts(): int
 }
 
 
+function getPosts()
+{
+    require "db.php";
+    $stmt = $pdo->prepare("SELECT * FROM posts;");
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 /**
  *
  * @return int Number of Posts in the last 24 hours.
@@ -39,6 +56,7 @@ function recentPosts(): int
     $stmt->execute();
     return $stmt->rowCount();
 }
+
 
 
 /**
@@ -54,15 +72,6 @@ function totalUserPosts($id): int
     $stmt->execute([$id]);
     return $stmt->rowCount();
     return mysqli_num_rows($result);
-}
-
-
-function getPosts()
-{
-    require "db.php";
-    $stmt = $pdo->prepare("SELECT * FROM posts;");
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 

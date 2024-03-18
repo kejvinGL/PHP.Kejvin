@@ -7,7 +7,7 @@
                     <i class="fa-solid fa-id-card fa-sm" style="opacity: 0.7;"></i>
                     <input name="fullname" type="text" class="grow" placeholder="Full Name" />
                 </label>
-                <?php echo isset($_SESSION["errors"]["admin"]["fullname"]) ? showErrorsAssoc("admin", "fullname") : "" ?>
+                <?php showErrorsAssoc("admin", "fullname") ?? null ?>
             </div>
             <div class="h-1/4">
                 <label class="h-3/5 input input-bordered flex items-center gap-2 <?php echo empty($_SESSION["errors"]["admin"]["email"]) ? "" : "input-error" ?>">
@@ -15,14 +15,14 @@
                     <input name="email" type="email" class="grow" placeholder="E-mail" />
                 </label>
 
-                <?php echo isset($_SESSION["errors"]["admin"]["email"]) ? showErrorsAssoc("admin", "email") : "" ?>
+                <?php showErrorsAssoc("admin", "email") ?? null ?>
             </div>
             <div class="h-1/4">
                 <label class="h-3/5 input input-bordered flex items-center gap-2 <?php echo empty($_SESSION["errors"]["admin"]["username"]) ? "" : "input-error" ?>">
                     <i class="fa-solid fa-user"></i>
                     <input name="username" type="text" class="grow" placeholder="Username" minlength="5" />
                 </label>
-                <?php echo isset($_SESSION["errors"]["admin"]["username"]) ? showErrorsAssoc("admin", "username") : "" ?>
+                <?php showErrorsAssoc("admin", "username") ?? null ?>
             </div>
             <div class="h-1/4">
 
@@ -31,7 +31,7 @@
                     <input name="password" type="password" class="grow" placeholder="********" minlength="8" />
                 </label>
 
-                <?php echo isset($_SESSION["errors"]["admin"]["password"]) ? showErrorsAssoc("admin", "password") : "" ?>
+                <?php showErrorsAssoc("admin", "password") ?? null  ?>
             </div>
 
         </form>
@@ -95,3 +95,4 @@
     </div>
 
 </main>
+<script src="assets/js/sidebar.js"></script>

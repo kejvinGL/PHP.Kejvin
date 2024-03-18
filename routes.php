@@ -1,16 +1,52 @@
 <?php
+
+use Controllers\AuthController;
+use Controllers\AdminController;
+use Controllers\ProfileController;
+use Controllers\PostController;
+use Controllers\ThemeController;
+
+
 //VIEWS
-$router->get('/', 'controllers/home.php');
-$router->get('/login', '/controllers/login.php');
-$router->get('/register', '/controllers/register.php');
-$router->get('/overall', '/controllers/overall.php');
-$router->get('/users', '/controllers/users.php');
-$router->get('/posts', '/controllers/posts.php');
-$router->get('/access', '/controllers/access.php');
+$router->get('/', function () {
+    $post = new PostController();
+    $post->index('home');
+});
+$router->get('/login', function () {
+    $auth = new AuthController();
+    $auth->index("login");
+});
+$router->get('/register', function () {
+    $auth = new AuthController();
+    $auth->index("register");
+});
+$router->get('/overall', function () {
+    $admin = new AdminController();
+    $admin->index("overall");
+});
+$router->get('/users', function () {
+    $admin = new AdminController();
+    $admin->index("users");
+});
+$router->get('/posts', function () {
+    $admin = new AdminController();
+    $admin->index("posts");
+});
+$router->get('/access', function () {
+    $admin = new AdminController();
+    $admin->index("access");
+});
 
-$router->get('/home', '/controllers/home.php');
+$router->get('/home', function () {
+    $post = new PostController();
+    $post->index('home');
+});
 
-$router->get('/profile', '/controllers/profile.php');
+$router->get('/profile', function () {
+    $profile = new ProfileController();
+    $profile->index('profile');
+});
+
 
 
 
@@ -37,21 +73,21 @@ $router->delete('/admin/deleteUser/{user_id}', function ($params) {
     $admin = new AdminController();
     $admin->deleteUser($params['user_id']);
 });
-$router->update('/admin/changeUser/{user_id}', function ($params) {
+$router->put('/admin/changeUser/{user_id}', function ($params) {
     $admin = new AdminController();
     $admin->changeUser($params['user_id']);
 });
 
 
-$router->update('/profile/changeAvatar', function () {
+$router->put('/profile/changeAvatar', function () {
     $profile = new ProfileController();
     $profile->changeAvatar();
 });
-$router->update('/profile/changeDetails', function () {
+$router->put('/profile/changeDetails', function () {
     $profile = new ProfileController();
     $profile->changeDetails();
 });
-$router->update('/profile/changePassword', function () {
+$router->put('/profile/changePassword', function () {
     $profile = new ProfileController();
     $profile->changePassword();
 });
@@ -73,7 +109,7 @@ $router->delete('/posts/deletePost/{post_id}', function ($params) {
 });
 
 
-$router->update('/user/changeTheme', function () {
+$router->put('/user/changeTheme', function () {
     $user = new ThemeController();
     $user->changeTheme();
 });

@@ -1,7 +1,7 @@
 <main class="w-full md:ml-64 bg-base-200 h-full transition-all main active">
     <div class=" flex h-14 justify-center items-center">
-        <?php echo empty($_SESSION["errors"]['changes']) ? "" : showErrors('changes') ?>
-        <?php echo empty($_SESSION["messages"]["changes"]) ? "" : showMessage('changes') ?>
+        <?php showMessage() ?? null ?>
+        <?php showError() ?? null ?>
     </div>
     <table class="table lg:text-lg">
         <thead>
@@ -97,3 +97,5 @@
         echo '<h3 class="w-full m-10 text-center text-3xl">No posts are made.</h3>';
     } ?>
 </main>
+<script src="assets/js/sidebar.js"></script>
+<script src="assets/js/enableInput.js"></script>

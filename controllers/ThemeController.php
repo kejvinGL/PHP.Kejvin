@@ -1,4 +1,7 @@
 <?php
+
+namespace Controllers;
+
 class ThemeController
 {
     function changeTheme()

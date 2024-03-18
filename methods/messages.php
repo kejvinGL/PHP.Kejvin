@@ -34,7 +34,7 @@ function showMessage()
  */
 function showMessages($input)
 {
-    if (isset($_SESSION['messages'])) {
+    if (isset($_SESSION['messages'][$input])) {
         foreach ($_SESSION['messages'][$input] as  $message) {
             echo '<span class="text-lg text-green-600" >' . $message . '</span> <br>';
         }

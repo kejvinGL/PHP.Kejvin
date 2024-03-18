@@ -1,10 +1,21 @@
 <?php
+
+namespace Controllers;
+
+
 class PostController
 {
+
+    function index()
+    {
+        view('home');
+        isClient();
+    }
 
     function createPost()
     {
         isLoggedIn();
+        isClient();
         $user_id = $_SESSION["user_id"];
         $title = $_POST["title"];
         $body = $_POST["body"];
@@ -16,17 +27,24 @@ class PostController
 
     function deletePost($id)
     {
+        isLoggedIn();
         $post = getPostByID($id);
-        if (getCurrentUserRole() === 0 || getCurrentUser() || $_SESSION["user_id"] == $post["user_id"]) {
-            if (deletePost($id)) addMessages(["Post deleted successfully"]);
+        if (getCurrentUserRole() === 0 || $_SESSION["user_id"] == $post["user_id"]) {
+            if (deletePost($id)) {
+                $messages = ["Post deleted successfully."];
+                addMessages($messages);
+            } else {
+                $errors = ["Post not found."];
+                addErrors($errors);
+            }
             if (getCurrentUserRole() === 0) {
-                redirectToPosts();
+                redirectToAdmin('posts');
             } else {
                 redirectToHome();
             }
         } else {
             http_response_code(400);
-            addErrors(["Not authorised to delete Post"]);
+            addMessages(["Not authorised to delete Post"]);
             redirectToHome();
         }
     }

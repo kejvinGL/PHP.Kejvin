@@ -1,5 +1,10 @@
 <?php
 
+use Controllers\AuthController;
+use Controllers\AdminController;
+use Controllers\ProfileController;
+use Controllers\PostController;
+
 function basePath($path): string
 {
     return BASE_PATH . $path;
@@ -12,50 +17,21 @@ function redirectToHome()
 }
 
 
-function redirectToLogin()
+function redirectToAuth($target)
 {
-    header("Location: /login");
+    header("Location: /$target");
     exit();
 }
 
 
 
 
-function redirectToRegister()
+function redirectToAdmin($target)
 {
-    header("Location: /register");
+    header("Location: /$target");
     exit();
 }
 
-
-
-
-function redirectToUserList()
-{
-    header("Location: /users");
-    exit();
-}
-
-
-function redirectToOverall()
-{
-    header("Location: /overall");
-    exit();
-}
-
-
-function redirectToAccess()
-{
-    header("Location: /access");
-    exit();
-}
-
-
-function redirectToPosts()
-{
-    header("Location: /posts");
-    exit();
-}
 
 
 

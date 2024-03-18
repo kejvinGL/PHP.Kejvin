@@ -1,5 +1,5 @@
 <div class=" h-1/5">
-    <?php echo isset($_SESSION["errors"]["user"]) ? showErrors('user') : null ?>
+    <?php showErrors('user') ?? null ?>
 </div>
 <div class="h-4/5 w-1/2">
     <div class="flex flex-col items-center justify-between w-full h-[420px]">
@@ -13,15 +13,14 @@
                     <i class="fa-solid fa-user"></i>
                     <input name="username" type="text" class="grow " placeholder="Username" value="<?php echo $_SESSION["input"]["username"] ?? "" ?>" />
                 </label>
-                <?php echo isset($_SESSION["errors"]["username"]) ? showErrors("username") : "" ?>
+                <?php showErrors("username") ?? null ?>
             </div>
             <div class="h-1/2">
                 <label class="input input-bordered flex items-center gap-2 <?php echo empty($_SESSION["errors"]["password"]) ? "" : "input-error" ?>">
                     <i class="fa-solid fa-key"></i>
                     <input name="password" type="password" class="grow" placeholder="********" />
                 </label>
-                <?php echo isset($_SESSION["errors"]["password"]) ? showErrors("password") : "";
-                unset($_SESSION["errors"]["username"]); ?>
+                <?php showErrors("password") ?? null ?>
             </div>
         </form>
         <div class="flex justify-evenly">

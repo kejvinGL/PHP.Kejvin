@@ -1,12 +1,8 @@
 <main class="w-full md:ml-64 bg-base-200 h-full transition-all main active">
     <div class=" flex h-14 justify-center items-center">
         <?php
-        if (isset($_SESSION["messages"]["changes"])) {
-            showMessages("changes");
-        }
-        if (isset($_SESSION["errors"]["changes"])) {
-            showErrors("changes");
-        }
+        showErrors("changes") ?? null;
+        showMessages("changes") ?? null;
         ?>
 
     </div>
@@ -130,3 +126,5 @@
             <?php } ?>
     </table>
 </main>
+<script src="assets/js/enableInput.js"></script>
+<script src="assets/js/sidebar.js"></script>

@@ -3,10 +3,10 @@ switch ($_SERVER["REQUEST_URI"]) {
     case '/client':
         $footer = '<footer class="footer footer-center p-4 text-base-content bottom-0"';
         break;
-    case '/views/posts.php':
+    case '/posts.php':
         $footer = '<footer class="footer footer-center p-4 text-base-content bottom-0"';
         break;
-    case '/views/users.php':
+    case '/users.php':
         $footer = '<footer class="footer footer-center p-4 text-base-content bottom-0"';
         break;
     default:

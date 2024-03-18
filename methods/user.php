@@ -1,4 +1,5 @@
 <?php
+
 function dd($v): void
 {
     echo "<pre>";
@@ -24,31 +25,16 @@ function dd($v): void
  * @param string $password The password of the client.
  * @return bool|null Returns the result of the query, or null if the query fails.
  */
-function createClient(string $fullname, string $username, string $email, string $password): bool|null
+
+
+function
+createUser(int $role, string $fullname, string $username, string $email, string $password): bool|null
 {
     require "db.php";
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-    $stmt = $pdo->prepare("INSERT INTO users (role_id, fullname, email, username, password) VALUES (1, ?, ?, ?, ?)");
-    return $stmt->execute([$fullname, $email, $username, $hashed_password]);
+    $stmt = $pdo->prepare("INSERT INTO users (role_id, fullname, email, username, password) VALUES (?, ?, ?, ?, ?)");
+    return $stmt->execute([$role, $fullname, $email, $username, $hashed_password]);
 }
-
-/**
- * Creates a new user with the role ADMIN using the given information.
- *
- * @param string $fullname The full name of the admin.
- * @param string $username The username of the admin.
- * @param string $email The email address of the admin.
- * @param string $password The password of the admin.
- * @return bool|null Returns the result of the query, or null if the query fails.
- */
-function createAdmin(string $fullname, string $username, string $email, string $password): bool|null
-{
-    require "db.php";
-    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-    $stmt = $pdo->prepare("INSERT INTO users (role_id, fullname, email, username, password) VALUES (0, ?, ?, ?, ?)");
-    return $stmt->execute([$fullname, $email, $username, $hashed_password]);
-}
-
 
 /**
  *
@@ -67,6 +53,10 @@ function deleteUser(int $id): bool
 {
     require "db.php";
     //Delete Media
+    if (getUserByID($id) == null) {
+        return false;
+    }
+
     $stmt = $pdo->prepare("DELETE FROM media WHERE user_id = ?");
     $stmt->execute([$id]);
     $folderPath = basePath("/assets/media/") . $id;
@@ -173,12 +163,12 @@ function isLoggedIn(): void
 {
     if (isset($_SESSION['user_id']) && getCurrentUser()) {
         if ($_SERVER['REQUEST_URI'] == '/login' || $_SERVER['REQUEST_URI'] == '/register') {
-            redirectToHome();
+            getCurrentUserRole() === 0 ? redirectToAdmin('overall') : redirectToHome();
             exit;
         }
     } else {
         if ($_SERVER['REQUEST_URI'] != '/login' && $_SERVER['REQUEST_URI'] != '/register') {
-            redirectToLogin();
+            redirectToAuth('login');
             exit;
         }
     }
@@ -194,7 +184,7 @@ function isAdmin(): void
 {
     if (getCurrentUserRole() !== 0) {
         session_unset();
-        redirectToLogin();
+        redirectToAuth('login');
     }
 }
 
@@ -207,7 +197,7 @@ function isAdmin(): void
 function isClient(): void
 {
     if (getCurrentUserRole() !== 1) {
-        redirectToOverall();
+        redirectToAuth('login');
     }
 }
 
@@ -295,8 +285,10 @@ function getUserAvatar(int $id): array|null
 function getCurrentUserRole(): int | null
 {
     require "db.php";
-    $user = getCurrentUser();
-    return $user['role_id'] ?? null;
+    $user_id = $_SESSION['user_id'];
+    $stmt = $pdo->prepare("SELECT role_id FROM users where user_id=$user_id");
+    $stmt->execute();
+    return $stmt->fetchColumn();
 }
 
 

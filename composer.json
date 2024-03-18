@@ -1,0 +1,19 @@
+{
+  "name": "kejvi/php.kejvin",
+  "autoload": {
+    "psr-4": {
+      "Router\\": "controllers",
+      "Controllers\\": "controllers"
+    },
+    "files": [
+      "helpers.php"
+    ]
+  },
+  "authors": [
+    {
+      "name": "kejvinGL",
+      "email": "kejvinbraka@gmail.com"
+    }
+  ],
+  "require": {}
+}

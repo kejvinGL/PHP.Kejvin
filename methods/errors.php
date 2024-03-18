@@ -48,7 +48,7 @@ function emptyError()
  */
 function showErrors($input)
 {
-    if (isset($_SESSION["errors"])) {
+    if (isset($_SESSION["errors"][$input])) {
         foreach ($_SESSION["errors"][$input] as $error) {
             echo '<span class="label-text-alt text-red-500">' . $error . '</span> <br>';
         }

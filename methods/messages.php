@@ -20,7 +20,7 @@ function addMessages($messages)
 function showMessage()
 {
 
-    if (isset($_SESSION['messages'])) {
+    if (isset($_SESSION['messages'][0])) {
         echo '<span class="text-lg text-green-600">' . $_SESSION["messages"][0] . '</span> <br>';
         emptyMessages();
     }

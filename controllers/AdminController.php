@@ -3,8 +3,8 @@
 namespace Controllers;
 
 use Validation\CreateUserValidator;
-use Validation\deleteUserValidator;
 use Validation\UserDetailsValidator;
+use Validation\deleteUserValidator;
 
 class AdminController
 {
@@ -27,8 +27,7 @@ class AdminController
         isLoggedIn();
         isAdmin();
         $data = (new CreateUserValidator)->validate($_REQUEST, $role . "-");
-
-        $this->checkNewUser($data["fullname"], $data["username"], $data["email"], $data["password"], $role);
+        $this->checkNewUser($data[$role . "-fullname"], $data[$role . "-username"], $data[$role . "-email"], $data[$role . "-password"], $role);
     }
 
 

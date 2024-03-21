@@ -23,6 +23,7 @@ class AuthController
     public function store()
     {
         $data = (new CreateUserValidator)->validate($_REQUEST);
+
         $this->checkRegister($data["fullname"], $data["username"], $data["email"], $data["password"]);
     }
 

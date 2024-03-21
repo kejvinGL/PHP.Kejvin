@@ -7,7 +7,7 @@ class CreateUserValidator extends Validator
     public function validate($data, string $options = "")
     {
         $this->clearErrors();
-        $data = $this->setFields($data);
+        $this->setFields($data);
         //CHECK FULLNAME
         $this->required($options . "fullname")->isFullname($options . "fullname");
 
@@ -25,26 +25,26 @@ class CreateUserValidator extends Validator
             foreach ($this->errors as $field => $value) {
                 unset($_SESSION["input"][$field]);
                 if ($this->checkErr($field)) {
-                    $_SESSION["input"][$field] = $this->data[$field];
+                    $_SESSION["input"][$field] = $data[$field];
                 }
             }
-            getCurrentUserRole() === 0 ? redirectToAdmin('access') : redirectToHome();
+            redirectToAuth("register");
         }
 
-        return $this->data;
+        return $data;
     }
 
 
 
 
-    public function toValidate($field): array | false
-    {
-        return [
-            'fullname' => ["->required('$field')->isFullname('$field')"],
-            'username' => ['minLength(5)', "unique('username', '$field')"],
-            'email' => ["required('$field')", "isEmail('$field')", "unique('email', '$field')"],
-            'password' => ["required('$field')", "minLength('$field' , 8)"]
+    // public function toValidate($field): array | false
+    // {
+    //     return [
+    //         'fullname' => ["->required('$field')->isFullname('$field')"],
+    //         'username' => ['minLength(5)', "unique('username', '$field')"],
+    //         'email' => ["required('$field')", "isEmail('$field')", "unique('email', '$field')"],
+    //         'password' => ["required('$field')", "minLength('$field' , 8)"]
 
-        ];
-    }
+    //     ];
+    // }
 }

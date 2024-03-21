@@ -93,6 +93,15 @@ function getCurrentUser(): array | bool
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
+function getUserByColumn(string $column, string $value)
+{
+    require "db.php";
+
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE $column = ?");
+    $stmt->execute([$value]);
+
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
 
 /**
  * Retrieves a user by their ID.
@@ -247,7 +256,7 @@ function getCurrentUserRole(): int | null
 {
     require "db.php";
 
-    $user_id = $_SESSION['user_id'];
+    $user_id = $_SESSION['user_id'] ?? null;
 
     $stmt = $pdo->prepare("SELECT role_id FROM users where user_id=$user_id");
     $stmt->execute();
@@ -335,7 +344,14 @@ function getUsers(): array|null
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+// function verifyRowBelongs(int $user_id, string $table, string $column, string $value)
+// {
+//     require 'db.php';
 
+//     $stmt = $pdo->prepare("SELECT COUNT(*) FROM $table WHERE user_id = ? and $column = ?");
+//     $stmt->execute([$user_id, $value]);
+//     $count = $stmt->fetchColumn();
+// }
 
 
 function verifyUnique($column, string $value, array $ignore = []): bool

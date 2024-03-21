@@ -2,9 +2,9 @@
 
 use Controllers\AuthController;
 use Controllers\AdminController;
-use Controllers\ProfileController;
 use Controllers\PostController;
 use Controllers\ThemeController;
+use Controllers\ProfileController;
 
 
 //VIEWS

@@ -57,23 +57,18 @@ class Validator
 
 
 
-    public function exists(string $column, string $value, string $field, string $error = null)
+    public function exists(string $table, string $column, string $value, string $field, string $error = null)
     {
         if ($this->checkErr($field)) {
-            if (!in_array($column, ["user_id", "username", "email"])) {
+            if (!in_array($column, ["user_id", "username", "email", 'post_id'])) {
                 array_push($this->errors[$field], "Invalid Column");
-            } elseif ($column === "username") {
-                if (!getUserByUsername($value)) {
-                    array_push($this->errors[$field], $error ?? "User does not exist");
+            } elseif ($table == "users") {
+                if (!getUserByColumn($column, $value)) {
+                    array_push($this->errors[$field], $error ??  "User does not exist");
                 }
-            } elseif ($column === "user_id") {
-                if (!getUserByID($value)) {
-                    dd($value);
-                    array_push($this->errors[$field], $error ?? "User does not exist");
-                }
-            } elseif ($column === "email") {
-                if (!getUserByEmail($value)) {
-                    array_push($this->errors[$field], $error ?? "User does not exist");
+            } elseif ($table == "posts") {
+                if (!getPostByColumn($column, $value)) {
+                    array_push($this->errors[$field], $error ??  "Post does not exist");
                 }
             }
         }
@@ -181,6 +176,15 @@ class Validator
         return $this;
     }
 
+    // public function belongs(string $user_id, string $table, string $column, string $value)
+    // {
+    //     if ($this->checkErr($table)) {
+    //         if (!verifyRowBelongs($user_id, $table, $column, $value)) {
+    //             array_push($this->errors[$table], $error ?? ucwords(str_replace(["_", "-"], " ", $table)) . " does not belogn to this User.");
+    //         }
+    //     }
+    //     return $this;
+    // }
     public function imgType(string $field, string $ext, string $error = null)
     {
 

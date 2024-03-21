@@ -85,7 +85,18 @@ function totalUserPosts($id): int
 }
 
 
-function getPostByID($id)
+function getPostByColumn($column, $value): array | bool
+{
+    require "db.php";
+
+    $stmt = $pdo->prepare("SELECT * FROM posts WHERE $column = ?;");
+    $stmt->execute([$value]);
+
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+
+function getPostByPostID($id)
 {
     require "db.php";
 

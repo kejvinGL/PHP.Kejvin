@@ -42,7 +42,7 @@ switch ($_SERVER["REQUEST_URI"]) {
   case '/home':
   case '/users':
   case '/posts':
-    $body = '<body class="overflow-y-auto h-max">';
+    $body = '<body class="overflow-y-auto min-h-full h-max">';
     break;
   default:
     $body = '<body class="overflow-hidden h-full">';

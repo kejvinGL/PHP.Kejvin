@@ -16,7 +16,7 @@ class LoginValidator extends Validator
 
         $user = getUserByUsername($this->data["username"]);
 
-        $this->exists("username", $this->data["username"], "username")->checkPassword("password", $user['password']);
+        $this->exists("users", "username", $this->data["username"], "username", "User does not exist")->checkPassword("password", $user['password']);
 
         if ($this->foundErrors()) {
             foreach ($this->errors as $field => $value) {

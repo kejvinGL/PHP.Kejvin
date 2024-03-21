@@ -20,18 +20,18 @@ function dd($v): void
 
 function showUserlistResponses()
 {
-    showErrorsLarge("password") ?? null;
     showErrorsLarge("new_username") ?? null;
-    showErrorsLarge("new_password") ?? null;
     showErrorsLarge("new_email") ?? null;
+    showErrorsLarge("password") ?? null;
+    showErrorsLarge("new_password") ?? null;
     showErrorsLarge("edit") ?? null;
-    showErrorsLarge("delete") ?? null;
     showErrorsLarge("changes") ?? null;
     showMessages("changes") ?? null;
 }
 function showHomeResponses()
 {
     showMessage() ?? null;
+    showErrorsLarge("post_id") ?? null;
     showErrorsLarge("title") ?? null;
     showErrorsLarge("body") ?? null;
 }

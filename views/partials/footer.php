@@ -1,6 +1,6 @@
 <?php
 switch ($_SERVER["REQUEST_URI"]) {
-    case '/client':
+    case '/home':
         $footer = '<footer class="footer footer-center p-4 text-base-content bottom-0"';
         break;
     case '/posts.php':

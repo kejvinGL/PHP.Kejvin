@@ -40,3 +40,8 @@ function redirectToProfile()
     header("Location: /profile");
     exit();
 }
+function redirectToLogout()
+{
+    header("Location: /auth/logout");
+    exit();
+}

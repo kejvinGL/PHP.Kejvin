@@ -7,20 +7,20 @@
             <p class="flex items-center justify-center">Login
             </p>
         </div>
-        <form id="login-form" action="/auth/userLogin" method="GET" class="h-[45%] flex flex-col justify-evenly max-w-[500px] w-full">
+        <form id="login-form" action="/auth/login" method="GET" class="h-[45%] flex flex-col justify-evenly max-w-[500px] w-full">
             <div class="h-1/2">
                 <label class="input input-bordered flex items-center gap-2 <?php echo empty($_SESSION["errors"]["username"]) ? "" : "input-error" ?>">
                     <i class="fa-solid fa-user"></i>
                     <input name="username" type="text" class="grow " placeholder="Username" value="<?php echo $_SESSION["input"]["username"] ?? "" ?>" />
                 </label>
-                <?php showErrors("username") ?? null ?>
+                <?php echo showErrors("username") ?? null ?>
             </div>
             <div class="h-1/2">
                 <label class="input input-bordered flex items-center gap-2 <?php echo empty($_SESSION["errors"]["password"]) ? "" : "input-error" ?>">
                     <i class="fa-solid fa-key"></i>
                     <input name="password" type="password" class="grow" placeholder="********" />
                 </label>
-                <?php showErrors("password") ?? null ?>
+                <?php echo showErrors("password") ?? null ?>
             </div>
         </form>
         <div class="flex justify-evenly">

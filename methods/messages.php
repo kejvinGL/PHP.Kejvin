@@ -24,6 +24,7 @@ function showMessage()
         echo '<span class="text-lg text-green-600">' . $_SESSION["messages"][0] . '</span> <br>';
         emptyMessages();
     }
+    emptyMessages();
 }
 
 
@@ -39,6 +40,7 @@ function showMessages($input)
             echo '<span class="text-lg text-green-600" >' . $message . '</span> <br>';
         }
     }
+    emptyMessages($input);
 }
 
 

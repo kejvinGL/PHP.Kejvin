@@ -1,4 +1,6 @@
  <?php
+
+
   $db_username = "root";
   $db_password = "";
   $dsn = 'mysql:host=localhost;dbname=loginpage;charset=utf8mb4';

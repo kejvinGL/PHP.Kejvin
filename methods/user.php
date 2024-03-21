@@ -1,21 +1,5 @@
 <?php
 
-function dd($v): void
-{
-    echo "<pre>";
-    var_dump($v);
-    echo "</pre>";
-    die();
-}
-
-
-/**
- *
- *      CREATE
- *
- */
-
-
 /**
  * Creates a new user with the role CLIENT using the given information.
  *
@@ -25,22 +9,17 @@ function dd($v): void
  * @param string $password The password of the client.
  * @return bool|null Returns the result of the query, or null if the query fails.
  */
-
-
-function
-createUser(int $role, string $fullname, string $username, string $email, string $password): bool|null
+function createUser(int $role, string $fullname, string $username, string $email, string $password): bool|null
 {
     require "db.php";
+
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
     $stmt = $pdo->prepare("INSERT INTO users (role_id, fullname, email, username, password) VALUES (?, ?, ?, ?, ?)");
+
     return $stmt->execute([$role, $fullname, $email, $username, $hashed_password]);
 }
 
-/**
- *
- *      DELETE
- *
- */
+
 
 
 /**
@@ -64,9 +43,11 @@ function deleteUser(int $id): bool
         array_map('unlink', glob($folderPath . '/*'));
         rmdir($folderPath);
     }
+
     //Delete Posts
     $stmt = $pdo->prepare("DELETE FROM posts WHERE user_id = ?");
     $stmt->execute([$id]);
+
     //Delete User
     $stmt = $pdo->prepare("DELETE FROM users WHERE user_id = ?");
     return $stmt->execute([$id]);
@@ -82,7 +63,9 @@ function deleteUser(int $id): bool
 function deleteUserAvatar(int $id): bool
 {
     require "db.php";
+
     $stmt = $pdo->prepare("DELETE FROM media WHERE user_id = ? AND type='avatar'");
+
     return $stmt->execute([$id]);
 }
 
@@ -101,9 +84,12 @@ function deleteUserAvatar(int $id): bool
 function getCurrentUser(): array | bool
 {
     require "db.php";
+
     $username = $_SESSION['username'] ?? "null";
+
     $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
     $stmt->execute([$username]);
+
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
@@ -117,8 +103,10 @@ function getCurrentUser(): array | bool
 function getUserByID(int $id): array|false
 {
     require "db.php";
+
     $stmt = $pdo->prepare("SELECT * FROM users WHERE user_id = ?");
     $stmt->execute([$id]);
+
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
@@ -132,8 +120,10 @@ function getUserByID(int $id): array|false
 function getUserByUsername(string $username): array|false
 {
     require "db.php";
+
     $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
     $stmt->execute([$username]);
+
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
@@ -148,68 +138,30 @@ function getUserByEmail(string $email): array|false
 {
     require "db.php";
     require "db.php";
+
     $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
     $stmt->execute([$email]);
+
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
 
-/**
- * Checks if a user is logged in.
- *
- * @return void Returns true if the user is logged in, false otherwise.
- */
-function isLoggedIn(): void
-{
-    if (isset($_SESSION['user_id']) && getCurrentUser()) {
-        if ($_SERVER['REQUEST_URI'] == '/login' || $_SERVER['REQUEST_URI'] == '/register') {
-            getCurrentUserRole() === 0 ? redirectToAdmin('overall') : redirectToHome();
-            exit;
-        }
-    } else {
-        if ($_SERVER['REQUEST_URI'] != '/login' && $_SERVER['REQUEST_URI'] != '/register') {
-            redirectToAuth('login');
-            exit;
-        }
-    }
-}
 
 
-/**
- * Checks if the user is an admin.
- *
- * @return void Redirects user to /Home if user is not an Admin.
- */
-function isAdmin(): void
-{
-    if (getCurrentUserRole() !== 0) {
-        session_unset();
-        redirectToAuth('login');
-    }
-}
 
 
-/**
- * Checks if the user is a client.
- *
- * @return void Redirects user to /Home if user is not a Client.
- */
-function isClient(): void
-{
-    if (getCurrentUserRole() !== 1) {
-        redirectToAuth('login');
-    }
-}
 
 
 function getUserUsername($id)
 {
     $user = getUserByID($id);
+
     return $user["username"];
 }
 function getUserLastLogin($id)
 {
     $user = getUserByID($id);
+
     return $user["last_login"];
 }
 
@@ -222,10 +174,13 @@ function getUserLastLogin($id)
 function getCurrentAvatar(): string|null
 {
     require "db.php";
+
     $user_id = $_SESSION['user_id'];
+
     $stmt = $pdo->prepare("SELECT * FROM media WHERE user_id = ? AND type='avatar'");
     $stmt->execute([$user_id]);
     $path = $stmt->fetchColumn();
+
     return $path ? "assets/media/" . $path : "assets/media/default/default.svg";
 }
 
@@ -239,8 +194,10 @@ function getCurrentAvatar(): string|null
 function hasUserAvatar(int $id): bool
 {
     require "db.php";
+
     $stmt = $pdo->prepare("SELECT * FROM media WHERE user_id = ? AND type='avatar'");
     $stmt->execute([$id]);
+
     return $stmt->rowCount();
 }
 
@@ -254,9 +211,11 @@ function hasUserAvatar(int $id): bool
 function getUserAvatarPath(int $id): string
 {
     require "db.php";
+
     $stmt = $pdo->prepare("SELECT * FROM media WHERE user_id = ? AND type='avatar'");
     $stmt->execute([$id]);
     $row = $stmt->fetch();
+
     return $row ? "assets/media/" . $row["path"] : "assets/media/default/default.svg";
 }
 
@@ -270,8 +229,10 @@ function getUserAvatarPath(int $id): string
 function getUserAvatar(int $id): array|null
 {
     require "db.php";
+
     $stmt = $pdo->prepare("SELECT * FROM media WHERE user_id = ? AND type='avatar'");
     $stmt->execute([$id]);
+
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
@@ -285,9 +246,12 @@ function getUserAvatar(int $id): array|null
 function getCurrentUserRole(): int | null
 {
     require "db.php";
+
     $user_id = $_SESSION['user_id'];
+
     $stmt = $pdo->prepare("SELECT role_id FROM users where user_id=$user_id");
     $stmt->execute();
+
     return $stmt->fetchColumn();
 }
 
@@ -301,7 +265,9 @@ function getCurrentUserRole(): int | null
 function getUserRole(int $id): int
 {
     require "db.php";
+
     $user = getUserByID($id);
+
     return $user['role_id'];
 }
 
@@ -314,8 +280,10 @@ function getUserRole(int $id): int
 function totalClients(): int
 {
     require "db.php";
+
     $stmt = $pdo->prepare("SELECT * FROM users WHERE role_id = 1");
     $stmt->execute();
+
     return $stmt->rowCount();
 }
 
@@ -328,8 +296,10 @@ function totalClients(): int
 function totalAdmins(): int
 {
     require "db.php";
+
     $stmt = $pdo->prepare("SELECT * FROM users WHERE role_id = 0");
     $stmt->execute();
+
     return $stmt->rowCount();
 }
 
@@ -341,8 +311,10 @@ function totalAdmins(): int
 function getClients(): array
 {
     require "db.php";
+
     $stmt = $pdo->prepare("SELECT * FROM users WHERE role_id = 1");
     $stmt->execute();
+
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
@@ -356,54 +328,33 @@ function getClients(): array
 function getUsers(): array|null
 {
     require "db.php";
+
     $stmt = $pdo->prepare("SELECT * FROM users;");
     $stmt->execute();
+
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 
-/**
- * Checks if a username is unique in the system.
- *
- * @param string $username The username to be checked.
- * @return bool Returns true if the username is unique, false otherwise.
- */
-function verifyUsernameUnique(string $username, array  $ignore = []): bool
-{
-    require "db.php";
-    if (empty($ignore)) {
-        $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
-        $stmt->execute([$username]);
-    } else {
-        $inQuery = implode(',', array_fill(0, count($ignore), '?'));
-        $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ? AND user_id NOT IN ($inQuery)");
-        $params = array_merge([$username], $ignore);
-        $stmt->execute($params);
-    }
-    return $stmt->rowCount() == 0;
-}
 
 
-/**
- * Checks if the given email is unique in the system.
- *
- * @param string $email The email to be checked.
- * @param array $ignore An array of email addresses to ignore during the check.
- * @return bool Returns true if the email is unique, false otherwise.
- */
-function verifyEmailUnique(string $email, array $ignore = []): bool
+function verifyUnique($column, string $value, array $ignore = []): bool
 {
     require "db.php";
+
     if (empty($ignore)) {
-        $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
-        $stmt->execute([$email]);
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE $column = ?");
+        $stmt->execute([$value]);
+        $count = $stmt->fetchColumn();
     } else {
         $inQuery = implode(',', array_fill(0, count($ignore), '?'));
-        $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ? AND user_id NOT IN ($inQuery)");
-        $params = array_merge([$email], $ignore);
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE $column = ? AND user_id NOT IN ($inQuery)");
+        $params = array_merge([$value], $ignore);
         $stmt->execute($params);
+        $count = $stmt->fetchColumn();
     }
-    return $stmt->rowCount() == 0;
+
+    return $count == 0;
 }
 
 
@@ -415,21 +366,6 @@ function verifyEmailUnique(string $email, array $ignore = []): bool
  */
 
 
-function setUserSession($user): void
-{
-    $_SESSION['user_id'] = $user['user_id'];
-    $_SESSION['username'] = $user['username'];
-    $_SESSION['email'] = $user['email'];
-    $_SESSION['darkmode'] = $user['darkmode'];
-}
-
-function unsetUserSession($user): void
-{
-    unset($_SESSION['user_id']);
-    unset($_SESSION['username']);
-    unset($_SESSION['email']);
-    unset($_SESSION['darkmode']);
-}
 
 /**
  * Sets the avatar for a user.
@@ -444,8 +380,10 @@ function unsetUserSession($user): void
 function setUserAvatar(string $saved_path, string $hash_name, string $file_name, string $file_ext, int $file_size): bool
 {
     require "db.php";
+
     $user_id = $_SESSION['user_id'];
     $stmt = $pdo->prepare("INSERT INTO media VALUES (?, ?, ?, ?, ?, 'avatar', ?)");
+
     return $stmt->execute([$saved_path, $hash_name, $file_name, $file_ext, $file_size, $user_id]);
 }
 
@@ -462,7 +400,9 @@ function setUserAvatar(string $saved_path, string $hash_name, string $file_name,
 function setDetails(string $username, string $email, string $new_username, string $new_email): bool
 {
     require "db.php";
+
     $stmt = $pdo->prepare("UPDATE users SET username = ?, email = ? WHERE username = ? AND email = ?");
+
     return $stmt->execute([$new_username, $new_email, $username, $email]);
 }
 
@@ -477,7 +417,9 @@ function setDetails(string $username, string $email, string $new_username, strin
 function setPassword(string $new, int $id): bool
 {
     require "db.php";
+
     $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE user_id= ?");
+
     return $stmt->execute([$new, $id]);;
 }
 
@@ -491,15 +433,19 @@ function setPassword(string $new, int $id): bool
 function setUserLastLogin(int $id): bool
 {
     require "db.php";
+
     $stmt = $pdo->prepare("UPDATE users SET last_login = NOW() WHERE user_id = ?");
+
     return $stmt->execute([$id]);
 }
 
 function setUserTheme(): bool
 {
     require "db.php";
+
     $mode = $_SESSION["darkmode"];
     $username = $_SESSION["username"];
     $stmt = $pdo->prepare("UPDATE users SET darkmode = ?  WHERE username = ?");
+
     return $stmt->execute([$mode, $username]);
 }

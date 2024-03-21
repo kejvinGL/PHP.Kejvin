@@ -51,43 +51,43 @@ $router->get('/profile', function () {
 
 
 // AUTHENTICATION
-$router->post('/auth/clientRegister', function () {
+$router->post('/auth/register', function () {
     $auth = new AuthController();
-    $auth->clientRegister();
+    $auth->store();
 });
-$router->get('/auth/userLogin', function () {
+$router->get('/auth/login', function () {
     $auth = new AuthController();
-    $auth->userLogin();
+    $auth->login();
 });
 $router->get('/auth/logout', function () {
     $auth = new AuthController();
-    $auth->userLogout();
+    $auth->logout();
 });
 
 
-$router->post('/admin/createUser/{role}', function ($params) {
+$router->post('/admin/create/{role}', function ($params) {
     $admin = new AdminController();
-    $admin->createUser($params['role']);
+    $admin->store($params['role']);
 });
-$router->delete('/admin/deleteUser/{user_id}', function ($params) {
+$router->delete('/admin/delete/{user_id}', function ($params) {
     $admin = new AdminController();
-    $admin->deleteUser($params['user_id']);
+    $admin->destroy($params['user_id']);
 });
-$router->put('/admin/changeUser/{user_id}', function ($params) {
+$router->put('/admin/change/{user_id}', function ($params) {
     $admin = new AdminController();
-    $admin->changeUser($params['user_id']);
+    $admin->edit($params['user_id']);
 });
 
 
-$router->put('/profile/changeAvatar', function () {
+$router->put('/profile/avatar', function () {
     $profile = new ProfileController();
     $profile->changeAvatar();
 });
-$router->put('/profile/changeDetails', function () {
+$router->put('/profile/details', function () {
     $profile = new ProfileController();
     $profile->changeDetails();
 });
-$router->put('/profile/changePassword', function () {
+$router->put('/profile/password', function () {
     $profile = new ProfileController();
     $profile->changePassword();
 });
@@ -98,14 +98,14 @@ $router->delete('/profile/deleteSelf', function () {
 
 
 
-$router->post('/posts/createPost', function () {
+$router->post('/posts/create', function () {
     $post = new PostController();
-    $post->createPost();
+    $post->store();
 });
 
-$router->delete('/posts/deletePost/{post_id}', function ($params) {
+$router->delete('/posts/delete/{post_id}', function ($params) {
     $post = new PostController();
-    $post->deletePost($params['post_id']);
+    $post->destroy($params['post_id']);
 });
 
 

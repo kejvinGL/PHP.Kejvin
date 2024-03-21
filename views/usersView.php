@@ -1,8 +1,8 @@
+<?php include "partials/admin/sideNav.php" ?>
 <main class="w-full md:ml-64 bg-base-200 h-full transition-all main active">
     <div class=" flex h-14 justify-center items-center">
         <?php
-        showErrors("changes") ?? null;
-        showMessages("changes") ?? null;
+        showUserlistResponses();
         ?>
 
     </div>
@@ -66,7 +66,7 @@
                     <td class="hidden md:table-cell">
                         <?php
                         $date = date_create($user['last_login']);
-                        echo date_format($date, ' H:m @ d/m/y') ?>
+                        echo date_format($date, 'd/m/y @ H:m') ?>
                     </td>
                     <td>
                         <?php echo getUserRole($user['user_id']) ? totalUserPosts($user['user_id']) : "" ?>
@@ -77,7 +77,7 @@
                                 <h3><span class="text-red-500">WARNING! </span>Editing User Information</h3>
                                 <p class="text-xs text-gray-600">Press ESC to cancel</p>
                                 <div class="modal-action">
-                                    <form method="POST" action="admin/changeUser/<?php echo $user["user_id"] ?>" id="edit_user" class="w-full">
+                                    <form method="POST" action="admin/change/<?php echo $user["user_id"] ?>" id="edit_user" class="w-full">
                                         <input type="hidden" name="_method" value="PUT">
                                         <label class="input input-bordered flex items-center gap-2">
                                             <i class="fa-solid fa-user"></i>
@@ -106,7 +106,7 @@
                                     <?php echo $user["fullname"] . " (@" . $user["username"] . ")" ?></h3>
                                 <p class="text-xs text-gray-600">Press ESC to cancel</p>
                                 <div class="modal-action flex flex-col">
-                                    <form id="delete_form" class="inline-flex join" action="/admin/deleteUser/<?php echo $user['user_id'] ?>" method="post">
+                                    <form id="delete_form" class="inline-flex join" action="/admin/delete/<?php echo $user['user_id'] ?>" method="post">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="password" name="password" class="input input-bordered join-item w-full max-w-xs" id="enter_pass" placeholder="********" />
                                         <input type="submit" name="delete" class="btn btn-outline join-item btn-error" id="deleteButton" value="Delete" />

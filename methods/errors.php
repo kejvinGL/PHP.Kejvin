@@ -56,6 +56,16 @@ function showErrors($input)
 
     emptyErrors($input);
 }
+function showErrorsLarge($input)
+{
+    if (isset($_SESSION["errors"][$input])) {
+        foreach ($_SESSION["errors"][$input] as $error) {
+            echo '<span class="label-text-alt text-red-500 text-lg">' . $error . '</span> <br>';
+        }
+    }
+
+    emptyErrors($input);
+}
 
 
 /**

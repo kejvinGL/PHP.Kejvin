@@ -1,14 +1,4 @@
 <?php
-session_start();
-
-
-
-
-require("methods/user.php");
-require("methods/errors.php");
-require("methods/messages.php");
-require("methods/post.php");
-require("methods/navigation.php");
 
 $title = "Kejvin.PHP | Login";
 switch ($_SERVER["REQUEST_URI"]) {

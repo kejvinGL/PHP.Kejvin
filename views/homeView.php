@@ -4,8 +4,8 @@
             <h3>Creating New Post</h3>
             <p class="text-xs text-gray-600">Press ESC to cancel</p>
             <div class="modal-action">
-                <form method="post" id="add_post" action="/posts/createPost" class="w-full">
-                    <input type="text" name="title" class="input input-bordered w-full" placeholder="Post title here.." required>
+                <form method="post" id="add_post" action="/posts/create" class="w-full">
+                    <input type="text" name="title" class="input input-bordered w-full" placeholder="Post title here..">
                     <textarea type name="body" form="add_post" class="textarea textarea-bordered textarea-lg w-full h-[300px] text-sm mb-2" placeholder="Type post here..."></textarea>
                     <div class="flex justify-center">
                         <input type="submit" name="submit" class="btn btn-success btn-outline btn-md text-xs" value="Create" />
@@ -18,9 +18,7 @@
         </div>
     </dialog>
     <button class="mx-auto btn m-10 size-16" onclick="addNew.showModal()"><i class="fa-solid fa-plus scale-150"></i></button>
-
-
-    <?php showMessage() ?? null ?>
+    <?php showHomeResponses() ?>
 </div>
 <?php
 $posts = getCurrentUserPosts();
@@ -52,7 +50,7 @@ if (empty($posts)) { ?>
                             <h3>Are you sure you want to delete this Post?</h3>
                             <p class="text-xs text-gray-600">Press ESC to cancel</p>
                             <div class="modal-action">
-                                <form method="post" action="/posts/deletePost/<?php echo $post['post_id']; ?>" class="w-full">
+                                <form method="post" action="/posts/delete/<?php echo $post['post_id']; ?>" class="w-full">
                                     <input type="hidden" name="_method" value="DELETE">
                                     <div class="flex justify-center">
                                         <input type="submit" name="delete" class="btn btn-error btn-outline btn-md text-xs" value="Delete" />

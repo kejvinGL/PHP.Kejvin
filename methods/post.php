@@ -11,11 +11,13 @@ function createPost($id, $title, $body)
 function deletePost($id): bool
 {
     require "db.php";
-    $stmt = $pdo->prepare("SELECT * FROM posts WHERE post_id = ?");
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM posts WHERE post_id = ?");
     $stmt->execute([$id]);
-    if ($stmt->rowCount() === 0) {
+
+    if ($stmt->fetchColumn() === 0) {
         return false;
     }
+
     $stmt = $pdo->prepare("DELETE FROM posts WHERE post_id = ?");
     $result = $stmt->execute([$id]);
     return $result ? true : false;
@@ -31,17 +33,21 @@ function deletePost($id): bool
 function totalPosts(): int
 {
     require "db.php";
-    $stmt = $pdo->prepare("SELECT * FROM users");
+
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM posts");
     $stmt->execute();
-    return $stmt->rowCount();
+
+    return $stmt->fetchColumn();
 }
 
 
 function getPosts()
 {
     require "db.php";
+
     $stmt = $pdo->prepare("SELECT * FROM posts;");
     $stmt->execute();
+
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
@@ -52,8 +58,10 @@ function getPosts()
 function recentPosts(): int
 {
     require "db.php";
+
     $stmt = $pdo->prepare("SELECT * FROM posts  WHERE date_created >= DATE_SUB(NOW(), INTERVAL 1 DAY);");
     $stmt->execute();
+
     return $stmt->rowCount();
 }
 
@@ -68,9 +76,11 @@ function recentPosts(): int
 function totalUserPosts($id): int
 {
     require "db.php";
+
     $stmt = $pdo->prepare("SELECT * FROM posts  WHERE user_id= ? ;");
     $stmt->execute([$id]);
     return $stmt->rowCount();
+
     return mysqli_num_rows($result);
 }
 
@@ -78,8 +88,10 @@ function totalUserPosts($id): int
 function getPostByID($id)
 {
     require "db.php";
+
     $stmt = $pdo->prepare("SELECT * FROM posts WHERE post_id = ?;");
     $stmt->execute([$id]);
+
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
@@ -91,8 +103,10 @@ function getPostByID($id)
 function getCurrentUserPosts(): array
 {
     require "db.php";
+
     $id = $_SESSION["user_id"];
     $stmt = $pdo->prepare("SELECT * FROM posts  WHERE user_id= ? ;");
     $stmt->execute([$id]);
+
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }

@@ -1,15 +1,10 @@
 <?php
-
+session_start();
 const BASE_PATH = __DIR__ . DIRECTORY_SEPARATOR;
 
 
 require "vendor/autoload.php";
-// require 'controllers/Router.php';
-// require 'controllers/AuthController.php';
-// require 'controllers/AdminController.php';
-// require 'controllers/ProfileController.php';
-// require 'controllers/PostController.php';
-// require 'controllers/ThemeController.php';
+
 use Router\Router;
 
 $router = new Router();

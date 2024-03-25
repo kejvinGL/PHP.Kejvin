@@ -9,16 +9,13 @@ class UserPasswordValidator extends Validator
     {
         $this->clearErrors();
 
-
         array_func($this->toValidate($old), $this->fields());
 
+
         $this->checkPassword("current_password", $old, "Incorrect Current Password");
-
-
         // IF ERRORS WHERE FOUND:
-        if ($this->foundErrors()) {
-            redirectToProfile();
-        }
+        $this->foundErrors();
+
         return $this->data;
     }
 

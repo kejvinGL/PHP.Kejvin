@@ -29,14 +29,13 @@ function showMessages($input): void
 }
 
 
-
-
 /**
  * Removes all messages from the session.
  *
+ * @param $input
  * @return void
  */
-function emptyMessages($input)
+function emptyMessages($input): void
 {
     unset($_SESSION['messages'][$input]);
 }

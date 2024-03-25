@@ -1,5 +1,5 @@
 {
-  "name": "kejvi/php.kejvin",
+  "name": "kejvin/php.kejvin",
   "autoload": {
     "psr-4": {
       "Router\\": "controllers",
@@ -21,7 +21,5 @@
       "email": "kejvinbraka@gmail.com"
     }
   ],
-  "require": {
-    "ext-pdo": "*"
-  }
+  "require": {}
 }

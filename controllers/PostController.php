@@ -7,14 +7,14 @@ use Validation\DeletePostValidator;
 
 class PostController
 {
-    function index()
+    function index(): void
     {
         isClient();
         view('home');
     }
 
 
-    function store()
+    function store(): void
     {
         isLoggedIn();
         isClient();
@@ -23,26 +23,21 @@ class PostController
         if (createPost($_SESSION["user_id"], $data["title"], $data["body"])) {
             $messages["post"] = ["Post created successfully."];
             addMessages($messages);
-            redirectToHome();
+            redirectBack();
         }
     }
 
-    function destroy($id)
+    function destroy($id): void
     {
         isLoggedIn();
 
         $data = (new DeletePostValidator)->destroy($id);
 
-
         if (deletePost($id)) {
             $messages["post"] = ["Post deleted successfully."];
             addMessages($messages);
 
-            if (getCurrentUserRole() === 0) {
-                redirectToAdmin('posts');
-            } else {
-                redirectToHome();
-            }
+            redirectBack();
         }
     }
 }

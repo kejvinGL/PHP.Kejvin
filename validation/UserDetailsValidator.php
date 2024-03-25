@@ -10,19 +10,13 @@ class UserDetailsValidator extends Validator
         $this->clearErrors();
 
         $this->exists("users", "user_id", $user_id, "edit", "User does not exist");
-
         array_func($this->toValidate($user_id), $this->fields());
 
-        if ($this->foundErrors()) {
-            if (strpos($_SERVER["HTTP_REFERER"], "profile")) {
-                redirectToProfile();
-            } else {
-                redirectToAdmin('users');
-            }
-        }
+        $this->foundErrors();
 
         return $this->data;
     }
+
 
     public function toValidate(int $user_id = null): array
     {
@@ -33,6 +27,7 @@ class UserDetailsValidator extends Validator
                 ->unique("email", "new_email", [$user_id], "Email is already in use.")
         ];
     }
+
 
     public function fields(): array
     {

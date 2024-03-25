@@ -20,7 +20,7 @@ function deletePost($id): bool
 
     $stmt = $pdo->prepare("DELETE FROM posts WHERE post_id = ?");
     $result = $stmt->execute([$id]);
-    return $result ? true : false;
+    return (bool)$result;
 }
 
 
@@ -73,15 +73,13 @@ function recentPosts(): int
  * @param int $id The ID of the user.
  * @return int The total number of posts for the user.
  */
-function totalUserPosts($id): int
+function totalUserPosts(int $id): int
 {
     require "db.php";
 
     $stmt = $pdo->prepare("SELECT * FROM posts  WHERE user_id= ? ;");
     $stmt->execute([$id]);
     return $stmt->rowCount();
-
-    return mysqli_num_rows($result);
 }
 
 

@@ -10,11 +10,12 @@ class DeleteUserValidator extends Validator
         $this->clearErrors();
         $this->data += ['user_id' => $user["user_id"], 'saved_password' => getCurrentUser()["password"]];
 
-        array_func($this->toValidate($user), $this->fields());
+        array_func($this->toValidate(), $this->fields());
         // IF ERRORS WHERE FOUND:
-        if ($this->foundErrors()) {
-            redirectToAdmin("users");
-        }
+
+       $this->foundErrors();
+
+
         return $this->data;
     }
 

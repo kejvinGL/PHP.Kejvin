@@ -5,7 +5,7 @@
             <input type="hidden" name="_method" value="PUT">
             <div class="flex flex-col items-center justify-evenly">
                 <div class="size-36 rounded">
-                    <img src="<?php echo getCurrentAvatar() ?>" />
+                    <img src="<?php echo getCurrentAvatar() ?>"  alt="avatar"/>
                 </div>
                 <label class="form-control w-full self-end">
                     <input name="avatar" type="file" accept="image/png, image/gif, image/jpeg" class="file-input file-input-bordered <?php echo empty($_SESSION["errors"]["avatar"]) ? "" : "file-input-error" ?> w-full max-w-xs " onchange="enableChange(this)" />

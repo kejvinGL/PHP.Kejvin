@@ -28,24 +28,15 @@ class Validator implements BaseValidator
     }
 
 
-    protected function foundErrors(): bool
+    protected function foundErrors(): void
     {
         foreach ($this->errors as $field => $errors) {
             if (!empty($errors)) {
                 addErrors($this->errors);
-                return true;
+                redirectBack();
             }
         }
-        return false;
     }
-
-
-    protected function newError(string $field, string $s): void
-    {
-        array_push($this->errors[$field], $s);
-        addErrors($this->errors);
-    }
-
 
 
     protected function exists(string $table, string $column, string $value, string $field, string $error = null)
@@ -101,7 +92,7 @@ class Validator implements BaseValidator
         }
         return $this;
     }
-    protected function isEmail(string $field)
+    protected function isEmail(string $field): static
     {
         if ($this->checkErr($field)) {
             if (!filter_var($this->data[$field], FILTER_VALIDATE_EMAIL)) {
@@ -156,15 +147,6 @@ class Validator implements BaseValidator
         return $this;
     }
 
-    // protected function belongs(string $user_id, string $table, string $column, string $value)
-    // {
-    //     if ($this->checkErr($table)) {
-    //         if (!verifyRowBelongs($user_id, $table, $column, $value)) {
-    //             array_push($this->errors[$table], $error ?? ucwords(str_replace(["_", "-"], " ", $table)) . " does not belogn to this User.");
-    //         }
-    //     }
-    //     return $this;
-    // }
     protected function imgType(string $field, string $ext, string $error = null): static
     {
 
@@ -195,5 +177,14 @@ class Validator implements BaseValidator
     protected function toValidate(): array
     {
         return [];
+    }
+    public function saveInput(): void
+    {
+        foreach ($this->errors as $field => $value) {
+            unset($_SESSION["input"][$field]);
+            if ($this->checkErr($field)) {
+                $_SESSION["input"][$field] = $_REQUEST[$field];
+            }
+        }
     }
 }

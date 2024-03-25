@@ -1,23 +1,18 @@
 <?php
 
-use Controllers\AuthController;
-use Controllers\AdminController;
-use Controllers\ProfileController;
-use Controllers\PostController;
-
 function basePath($path): string
 {
     return BASE_PATH . $path;
 }
 
-function redirectToHome()
+function redirectToHome(): void
 {
     header("Location: /home");
     exit();
 }
 
 
-function redirectToAuth($target)
+function redirectToAuth($target): void
 {
     header("Location: /$target");
     exit();
@@ -26,22 +21,20 @@ function redirectToAuth($target)
 
 
 
-function redirectToAdmin($target)
+function redirectToAdmin($target): void
 {
     header("Location: /$target");
     exit();
 }
 
-
-
-
-function redirectToProfile()
-{
-    header("Location: /profile");
-    exit();
-}
-function redirectToLogout()
+function redirectToLogout(): void
 {
     header("Location: /auth/logout");
+    exit();
+}
+
+function redirectBack(): void
+{
+    header("Location: " . $_SERVER["HTTP_REFERER"]);
     exit();
 }

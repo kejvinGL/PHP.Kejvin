@@ -21,17 +21,10 @@ class CreateUserValidator extends Validator
 
         array_func($this->toValidate(), $this->fields($this->options));
 
+        $this->saveInput();
 
         // IF ERRORS WHERE FOUND:
-        if ($this->foundErrors()) {
-            foreach ($this->errors as $field => $value) {
-                unset($_SESSION["input"][$field]);
-                if ($this->checkErr($field)) {
-                    $_SESSION["input"][$field] = $_REQUEST[$field];
-                }
-            }
-            getCurrentUserRole() === 0 ? redirectToAdmin("access") : redirectToAuth("register");
-        }
+        $this->foundErrors();
 
         return $this->data;
     }

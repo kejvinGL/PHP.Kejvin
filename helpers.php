@@ -105,7 +105,7 @@ function isAdmin(): void
  * @param mixed $user The user data to be stored in the session.
  * @return void
  */
-function setUserSession($user): void
+function setUserSession(array $user): void
 {
     $_SESSION['user_id'] = $user['user_id'];
     $_SESSION['username'] = $user['username'];
@@ -129,12 +129,12 @@ function unsetUserSession(): void
 
 
 if (!function_exists('array_only')) {
-    function array_only(array $array, array $fields)
+    function array_only(array $array, array $fields): array
     {
         $result = [];
         foreach ($array as $field => $key) {
             if (in_array($field, $fields)) {
-                $result[$field] = $array[$field];
+                $result[$field] = $key;
             }
         }
         return $result;

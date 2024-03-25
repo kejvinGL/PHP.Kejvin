@@ -4,7 +4,7 @@ namespace Controllers;
 
 class ThemeController
 {
-    function changeTheme()
+    function changeTheme(): void
     {
         $_SESSION["darkmode"] = !$_SESSION["darkmode"];
         if (isset($_SESSION['username'])) {

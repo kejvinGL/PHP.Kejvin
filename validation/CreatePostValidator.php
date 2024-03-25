@@ -10,12 +10,14 @@ class CreatePostValidator extends Validator
 
         array_func($this->toValidate(), $this->fields());
 
-        if ($this->foundErrors()) {
-            redirectToHome();
-        }
+        $this->foundErrors();
+
+        redirectBack();
 
         return $this->data;
     }
+
+
     public function toValidate(): array
     {
         return [
@@ -23,6 +25,8 @@ class CreatePostValidator extends Validator
             'body' => $this->required("body", "Post body cannot be empty")
         ];
     }
+
+
     public function fields(): array
     {
         return [

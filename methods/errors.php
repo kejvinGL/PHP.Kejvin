@@ -6,39 +6,10 @@
  * @param array $errors An array of errors to be added.
  * @return void
  */
-function addErrors($errors)
+function addErrors(array $errors): void
 {
     $_SESSION["errors"] = $errors;
 }
-
-
-/**
- * Displays an error message in cases where there is only one error.
- *
- * @return void
- */
-function showError()
-{
-    if (isset($_SESSION["errors"])) {
-        echo '<span class="text-lg text-red-500">' . $_SESSION["errors"][0] . '</span> <br>';
-    }
-
-    emptyError();
-}
-
-
-/**
- * Removes all errors from the session.
- *
- * @return void
- */
-function emptyError()
-{
-    unset($_SESSION['errors']);
-}
-
-
-
 
 /**
  * Displays an error message in cases where there is an array of errors.
@@ -46,7 +17,7 @@ function emptyError()
  * @param mixed $input The input for which error messages should be displayed.
  * @return void
  */
-function showErrors($input)
+function showErrors(mixed $input): void
 {
     if (isset($_SESSION["errors"][$input])) {
         foreach ($_SESSION["errors"][$input] as $error) {
@@ -56,7 +27,7 @@ function showErrors($input)
 
     emptyErrors($input);
 }
-function showErrorsLarge($input)
+function showErrorsLarge($input): void
 {
     if (isset($_SESSION["errors"][$input])) {
         foreach ($_SESSION["errors"][$input] as $error) {
@@ -69,16 +40,12 @@ function showErrorsLarge($input)
 
 
 /**
- * Removes errors from a specific arra in errors from the session.
+ * Removes errors from a specific array in errors from the session.
  *
- * @param mixed $input The input to clear the error messages for.
+ * @param string $input The input to clear the error messages for.
  * @return void
  */
-function emptyErrors($input)
+function emptyErrors(string $input): void
 {
     unset($_SESSION['errors'][$input]);
 }
-
-
-
-

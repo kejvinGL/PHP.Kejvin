@@ -249,7 +249,7 @@ function getUserAvatar(int $id): array|null
 /**
  * Retrieves the current user's role.
  *
- * @return int The current user's role as an integer
+ * @return int|null The current user's role as an integer
  * (0 - admin, 1 - client )
  */
 function getCurrentUserRole(): int | null
@@ -315,7 +315,7 @@ function totalAdmins(): int
 /**
  * Retrieves a list of clients from the database.
  *
- * @return mysqli_result The result set containing the clients.
+ * @return array The result set containing the clients.
  */
 function getClients(): array
 {
@@ -331,7 +331,7 @@ function getClients(): array
 /**
  * Retrieves the list of users from the database.
  *
- * @return array The result set containing the users.
+ * @return array|null The result set containing the users.
  */
 
 function getUsers(): array|null
@@ -361,14 +361,13 @@ function verifyUnique($column, string $value, array $ignore = []): bool
     if (empty($ignore)) {
         $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE $column = ?");
         $stmt->execute([$value]);
-        $count = $stmt->fetchColumn();
     } else {
         $inQuery = implode(',', array_fill(0, count($ignore), '?'));
         $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE $column = ? AND user_id NOT IN ($inQuery)");
         $params = array_merge([$value], $ignore);
         $stmt->execute($params);
-        $count = $stmt->fetchColumn();
     }
+    $count = $stmt->fetchColumn();
 
     return $count == 0;
 }
@@ -436,7 +435,7 @@ function setPassword(string $new, int $id): bool
 
     $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE user_id= ?");
 
-    return $stmt->execute([$new, $id]);;
+    return $stmt->execute([$new, $id]);
 }
 
 

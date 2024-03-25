@@ -8,14 +8,14 @@ use Validation\LoginValidator;
 
 class AuthController
 {
-    public function showLogin()
+    public function showLogin(): void
     {
         isLoggedIn();
         view("login");
     }
 
 
-    public function showRegister()
+    public function showRegister(): void
     {
         isLoggedIn();
         view("register");
@@ -25,7 +25,7 @@ class AuthController
 
 
     //REGISTER
-    public function store(string $options)
+    public function store(string $options): void
     {
         $data = (new CreateUserValidator($options))->validate();
 
@@ -39,7 +39,7 @@ class AuthController
         $user = getUserByUsername($username);
         setUserSession($user);
         mkdir(basePath("/assets/media/") . $user['user_id']);
-        getCurrentUserRole() === 0 ? redirectToAdmin('access') : redirectToHome();
+        redirectBack();
     }
 
 
@@ -47,21 +47,21 @@ class AuthController
 
     // LOGIN
 
-    public function login()
+    public function login(): void
     {
         $data = (new LoginValidator)->validate();
 
-        $this->checkLogin($data["username"], $data["password"]);
+        $this->checkLogin($data["username"]);
     }
 
-    private function checkLogin($username)
+    private function checkLogin($username): void
     {
         $user = getUserByUsername($username);
         setUserLastLogin($user['user_id']);
         setUserSession($user);
         unset($_SESSION["input"]);
         unset($_SESSION["errors"]);
-        getCurrentUserRole() === 0 ? redirectToAdmin('overall') : redirectToHome();
+        redirectBack();
     }
 
 
@@ -69,7 +69,7 @@ class AuthController
 
     //LOGOUT
 
-    public function logout()
+    public function logout(): void
     {
         unsetUserSession();
         redirectToAuth('login');

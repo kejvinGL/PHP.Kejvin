@@ -62,7 +62,7 @@ class AdminController
         $messages[$role] = array();
         array_push($messages[$role], "New " . ucfirst($role) . " created");
         addMessages($messages);
-        redirectToAdmin('access');
+        redirectBack();
     }
 
 
@@ -89,14 +89,14 @@ class AdminController
             $messages["changes"] = array();
             array_push($messages["changes"], "User deleted successfully");
             addMessages($messages);
-            redirectToAdmin('users');
         } else {
 
             $errors['changes'] = array();
             array_push($errors["changes"], "User not found");
             addErrors($errors);
-            redirectToAdmin('users');
         }
+
+        redirectBack();
     }
 
 
@@ -122,7 +122,7 @@ class AdminController
             $messages['changes'] =  ["User information changed successfully"];
             addMessages($messages);
 
-            redirectToAdmin('users');
+            redirectBack();
         }
     }
 }

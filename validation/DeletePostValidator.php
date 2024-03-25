@@ -9,20 +9,18 @@ class DeletePostValidator extends Validator
     {
         $this->clearErrors();
         array_func($this->toValidate($id), $this->fields());
-        if ($this->foundErrors()) {
-            redirectToHome();
-        }
+
+
+        $this->foundErrors();
+
         $this->data = getPostByPostID($id);
 
         if (getCurrentUserRole() === 1 && $_SESSION["user_id"] !== $this->data["user_id"]) {
             http_response_code(400);
-            array_push($this->errors["post_id"], "Not authorised to delete Post");
+            $this->errors["post_id"] += ["Not authorised to delete Post"];
         }
 
-        if ($this->foundErrors()) {
-            redirectToHome();
-        }
-
+        $this->foundErrors();
 
         return $this->data;
     }

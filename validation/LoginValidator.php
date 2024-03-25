@@ -12,33 +12,21 @@ class LoginValidator extends Validator
 
         array_func($this->toValidate(), $this->fields());
 
-        if ($this->foundErrors()) {
-            $this->saveField();
-            redirectToAuth('login');
-        }
+        $this->saveInput();
+        $this->foundErrors();
 
 
         $user = getUserByUsername($this->data["username"]);
-
         $this->exists("users", "username", $this->data["username"], "username", "User does not exist")
             ->checkPassword("password", $user['password']);
 
-        if ($this->foundErrors()) {
-            $this->saveField();
-            redirectToAuth('login');
-        }
+        $this->saveInput();
+
+        $this->foundErrors();
+
         return $this->data;
     }
 
-    private function saveField()
-    {
-        foreach ($this->errors as $field => $value) {
-            unset($_SESSION["input"][$field]);
-            if ($this->checkErr($field)) {
-                $_SESSION["input"][$field] = $this->data[$field];
-            }
-        }
-    }
 
     public function toValidate(): array
     {

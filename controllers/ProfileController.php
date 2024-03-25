@@ -60,7 +60,7 @@ class ProfileController
             move_uploaded_file($_FILES["avatar"]["tmp_name"], $file_path);
             $messages["avatar"] = ["Avatar changed successfully"];
             addMessages($messages);
-            redirectToProfile();
+            redirectBack();
         }
     }
 
@@ -87,7 +87,7 @@ class ProfileController
             $_SESSION['username'] = $new_username;
             $_SESSION['email'] = $new_email;
 
-            redirectToProfile();
+            redirectBack();
         }
     }
 
@@ -114,7 +114,7 @@ class ProfileController
             $messages = array();
             $messages["avatar"] = ["Password changed successfully."];
             addMessages($messages);
-            redirectToProfile();
+            redirectBack();
         }
     }
 

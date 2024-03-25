@@ -8,43 +8,47 @@ use Controllers\ProfileController;
 
 
 //VIEWS
+$router->get('/index.php', function () {
+    $post = new PostController();
+    $post->index();
+});
 $router->get('/', function () {
     $post = new PostController();
-    $post->index('home');
+    $post->index();
 });
 $router->get('/login', function () {
     $auth = new AuthController();
-    $auth->index("login");
+    $auth->showLogin();
 });
 $router->get('/register', function () {
     $auth = new AuthController();
-    $auth->index("register");
+    $auth->showRegister();
 });
 $router->get('/overall', function () {
     $admin = new AdminController();
-    $admin->index("overall");
+    $admin->showOverall();
 });
 $router->get('/users', function () {
     $admin = new AdminController();
-    $admin->index("users");
+    $admin->showUsers();
 });
 $router->get('/posts', function () {
     $admin = new AdminController();
-    $admin->index("posts");
+    $admin->showPosts();
 });
 $router->get('/access', function () {
     $admin = new AdminController();
-    $admin->index("access");
+    $admin->showAccess();
 });
 
 $router->get('/home', function () {
     $post = new PostController();
-    $post->index('home');
+    $post->index();
 });
 
 $router->get('/profile', function () {
     $profile = new ProfileController();
-    $profile->index('profile');
+    $profile->index();
 });
 
 
@@ -53,7 +57,7 @@ $router->get('/profile', function () {
 // AUTHENTICATION
 $router->post('/auth/register', function () {
     $auth = new AuthController();
-    $auth->store();
+    $auth->store("");
 });
 $router->get('/auth/login', function () {
     $auth = new AuthController();

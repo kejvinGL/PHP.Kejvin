@@ -14,7 +14,7 @@
         </form>
     </div>
     <div class="flex flex-col justify-end items-center w-full h-1/4 pb-3">
-        <?php echo isset($_SESSION["errors"]["avatar"]) ? showErrors("avatar") : ""; ?>
+        <?php showErrors("avatar")?? null; ?>
         <input type="submit" name="submit" class="btn flex w-4/5 self-center" id="avatarButton" form="avatar-change" value="Change Avatar" disabled>
     </div>
 </div>

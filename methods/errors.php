@@ -80,33 +80,5 @@ function emptyErrors($input)
 }
 
 
-/**
- * Displays the errors of an associtated array for each input.
- *
- * @param array $input The input data containing the errors.
- * @param string $field The name of the input field.
- * @return void
- */
-function showErrorsAssoc($input, $field)
-{
-    if (isset($_SESSION["errors"])) {
-        foreach ($_SESSION["errors"][$input][$field] as $error) {
-            echo '<span class="label-text-alt text-red-500">' . $error . '</span> <br>';
-        }
-    }
-
-    emptyErrorsAssoc($input, $field);
-}
 
 
-/**
- * Removes the errors of an associated array for an input.
- *
- * @param array $input The input array containing the errors.
- * @param string $field The field name to check for errors.
- * @return bool Returns true if there are no errors associated with the field, false otherwise.
- */
-function emptyErrorsAssoc($input, $field)
-{
-    unset($_SESSION['errors'][$input][$field]);
-}

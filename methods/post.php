@@ -4,7 +4,7 @@ function createPost($id, $title, $body)
 {
     require "db.php";
     $stmt = $pdo->prepare("INSERT INTO posts (title, body, user_id) VALUES (?, ?, ?)");
-    $stmt->execute([$title, $body, $id]);
+    return $stmt->execute([$title, $body, $id]);
 }
 
 

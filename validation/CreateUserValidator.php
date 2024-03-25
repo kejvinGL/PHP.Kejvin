@@ -4,47 +4,59 @@ namespace Validation;
 
 class CreateUserValidator extends Validator
 {
-    public function validate($data, string $options = "")
+    private string $options;
+
+    public function __construct(string $options = "")
     {
+        $this->options = $options;
+        $this->data = array_only($_REQUEST, $this->fields($options));
+        $this->errors = array_fill_keys($this->fields($options), []);
+    }
+
+
+    public function validate(): array
+    {
+
         $this->clearErrors();
-        $this->setFields($data);
-        //CHECK FULLNAME
-        $this->required($options . "fullname")->isFullname($options . "fullname");
 
-        //CHECK PASSWORD
-        $this->required($options . "password")->minLength($options . "password", 8);
+        array_func($this->toValidate(), $this->fields($this->options));
 
-        //CHECK USERNAME
-        $this->required($options . "username")->minLength($options . "username", 5)->unique("username", $options . "username");
-
-        //CHECK EMAIL
-        $this->required($options . "email")->isEmail($options . "email")->unique("email", $options . "email");
 
         // IF ERRORS WHERE FOUND:
         if ($this->foundErrors()) {
             foreach ($this->errors as $field => $value) {
                 unset($_SESSION["input"][$field]);
                 if ($this->checkErr($field)) {
-                    $_SESSION["input"][$field] = $data[$field];
+                    $_SESSION["input"][$field] = $_REQUEST[$field];
                 }
             }
-            redirectToAuth("register");
+            getCurrentUserRole() === 0 ? redirectToAdmin("access") : redirectToAuth("register");
         }
 
-        return $data;
+        return $this->data;
     }
 
 
+    public function toValidate(): array
+    {
+        return
+            [
+                "$this->options .fullname" => $this->required($this->options . "fullname"),
+                "$this->options .email" => $this->required($this->options . "email")->isEmail($this->options . "email")->unique("email", $this->options . "email"),
+                "$this->options .password" => $this->required($this->options . "password")->minLength($this->options . "password", 8),
+                "$this->options .username" => $this->required($this->options . "username")->minLength($this->options . "username", 5)->unique("username", $this->options . "username"),
+            ];
+    }
 
 
-    // public function toValidate($field): array | false
-    // {
-    //     return [
-    //         'fullname' => ["->required('$field')->isFullname('$field')"],
-    //         'username' => ['minLength(5)', "unique('username', '$field')"],
-    //         'email' => ["required('$field')", "isEmail('$field')", "unique('email', '$field')"],
-    //         'password' => ["required('$field')", "minLength('$field' , 8)"]
-
-    //     ];
-    // }
+    public function fields(string $options = ""): array
+    {
+        return
+            [
+                $options . 'fullname',
+                $options . 'username',
+                $options . 'email',
+                $options . 'password',
+            ];
+    }
 }

@@ -40,7 +40,7 @@
             <input type="submit" class="btn btn-outline w-5/12" name="submit" form="admin-form" value="Register">
         </div>
         <div class="flex justify-center">
-            <?php echo isset($_SESSION["messages"]["admin"]) ? showMessages("admin") : "" ?>
+            <?php showMessages("admin") ?? null  ?>
         </div>
 
     </div>
@@ -53,16 +53,16 @@
                     <i class="fa-solid fa-id-card fa-sm" style="opacity: 0.7;"></i>
                     <input name="client-fullname" type="text" class="grow" placeholder="Full Name" value="<?php echo $_SESSION["input"]["client-fullname"] ?? null ?>" />
                 </label>
-                <?php echo isset($_SESSION["errors"]["client-fullname"]) ? showErrors("client-fullname") : "" ?>
+                <?php showErrors("client-fullname") ?? null ?>
             </div>
 
 
             <div class="h-1/4">
                 <label class="h-3/5 input input-bordered flex items-center gap-2 <?php echo empty($_SESSION["errors"]["client-email"]) ? "" : "input-error" ?>">
                     <i class="fa-solid fa-envelope"></i>
-                    <input name="client-email" type="emial" class="grow" placeholder="E-mail" value="<?php echo $_SESSION["input"]["client-email"] ?? null ?>" />
+                    <input name="client-email" type="email" class="grow" placeholder="E-mail" value="<?php echo $_SESSION["input"]["client-email"] ?? null ?>" />
                 </label>
-                <?php echo isset($_SESSION["errors"]["client-email"]) ? showErrors("client-email") : "" ?>
+                <?php showErrors("client-email") ?? null ?>
             </div>
 
 
@@ -72,7 +72,7 @@
                     <i class="fa-solid fa-user"></i>
                     <input name="client-username" type="text" class="grow" placeholder="Username" value="<?php echo $_SESSION["input"]["client-username"] ?? null ?>" />
                 </label>
-                <?php echo isset($_SESSION["errors"]["client-username"]) ? showErrors("client-username") : "" ?>
+                <?php showErrors("client-username") ?? null ?>
             </div>
 
 
@@ -82,7 +82,7 @@
                     <i class="fa-solid fa-key"></i>
                     <input name="client-password" type="password" class="grow" placeholder="********" />
                 </label>
-                <?php echo isset($_SESSION["errors"]["client-password"]) ? showErrors("client-password") : "" ?>
+                <?php showErrors("client-password") ?? null ?>
             </div>
 
         </form>
@@ -90,7 +90,7 @@
             <input type="submit" class="btn btn-outline w-5/12" name="submit" form="client-form" value="Register">
         </div>
         <div class="flex justify-center">
-            <?php echo isset($_SESSION["messages"]["client"]) ? showMessages("client") : "" ?>
+            <?php showMessages("client") ?? null  ?>
         </div>
     </div>
 

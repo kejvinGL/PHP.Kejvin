@@ -28,7 +28,7 @@
                         <div class="flex items-center gap-0 justify-center">
                             <div class="avatar">
                                 <div class="mask mask-squircle size-6">
-                                    <img src="<?php echo getUserAvatarPath($user['user_id']) ?>" />
+                                    <img src="<?php echo getUserAvatarPath($user['user_id']) ?>"  alt="avatar"/>
                                 </div>
                             </div>
                         </div>

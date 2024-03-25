@@ -2,20 +2,37 @@
 
 namespace Validation;
 
-class deleteUserValidator extends Validator
+class DeleteUserValidator extends Validator
 {
 
-    public function validate($data)
+    public function validate(array $user = null): array
     {
         $this->clearErrors();
-        $data = $this->setFields($data);
-        $user = getCurrentUser();
-        $saved_password = $user['password'];
-        $this->exists("users", "user_id", $this->data["user_id"], "delete", "User does not exist.")
-            ->required("password", "Your current password must be entered.")->checkPassword("password", $saved_password);
+        $this->data += ['user_id' => $user["user_id"], 'saved_password' => getCurrentUser()["password"]];
 
+        array_func($this->toValidate($user), $this->fields());
+        // IF ERRORS WHERE FOUND:
         if ($this->foundErrors()) {
             redirectToAdmin("users");
         }
+        return $this->data;
+    }
+
+
+    protected function toValidate(): array
+    {
+        return
+            [
+                "password" => $this->exists("users", "user_id", $this->data["user_id"], "password", "delete")
+                    ->required("password", "Your Password must be entered.")->checkPassword("password", $this->data['saved_password']),
+            ];
+    }
+
+
+    protected function fields(): array
+    {
+        return [
+            "password"
+        ];
     }
 }

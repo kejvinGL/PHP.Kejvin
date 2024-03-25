@@ -8,21 +8,26 @@ use Validation\LoginValidator;
 
 class AuthController
 {
-    public $errors = array();
-    public $v;
-
-
-    public function index($view)
+    public function showLogin()
     {
         isLoggedIn();
-        view($view); // Login / Register
+        view("login");
     }
 
 
-    //REGISTER
-    public function store()
+    public function showRegister()
     {
-        $data = (new CreateUserValidator)->validate($_REQUEST);
+        isLoggedIn();
+        view("register");
+    }
+
+
+
+
+    //REGISTER
+    public function store(string $options)
+    {
+        $data = (new CreateUserValidator($options))->validate();
 
         $this->checkRegister($data["fullname"], $data["username"], $data["email"], $data["password"]);
     }
@@ -34,7 +39,7 @@ class AuthController
         $user = getUserByUsername($username);
         setUserSession($user);
         mkdir(basePath("/assets/media/") . $user['user_id']);
-        redirectToHome();
+        getCurrentUserRole() === 0 ? redirectToAdmin('access') : redirectToHome();
     }
 
 
@@ -44,7 +49,7 @@ class AuthController
 
     public function login()
     {
-        $data = (new LoginValidator)->validate($_REQUEST);
+        $data = (new LoginValidator)->validate();
 
         $this->checkLogin($data["username"], $data["password"]);
     }
@@ -66,7 +71,7 @@ class AuthController
 
     public function logout()
     {
-        session_unset();
+        unsetUserSession();
         redirectToAuth('login');
     }
 }

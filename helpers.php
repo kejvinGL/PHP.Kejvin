@@ -1,6 +1,6 @@
 <?php
 
-function view($view)
+function view($view): void
 {
     require "views/partials/header.php";
     isLoggedIn();
@@ -18,22 +18,29 @@ function dd($v): void
     die();
 }
 
-function showUserlistResponses()
+function showUserlistResponses(): void
 {
+    showMessages("changes") ?? null;
     showErrorsLarge("new_username") ?? null;
     showErrorsLarge("new_email") ?? null;
     showErrorsLarge("password") ?? null;
     showErrorsLarge("new_password") ?? null;
     showErrorsLarge("edit") ?? null;
     showErrorsLarge("changes") ?? null;
-    showMessages("changes") ?? null;
 }
-function showHomeResponses()
+function showHomeResponses(): void
 {
-    showMessage() ?? null;
+    showMessages("post") ?? null;
     showErrorsLarge("post_id") ?? null;
     showErrorsLarge("title") ?? null;
     showErrorsLarge("body") ?? null;
+}
+
+function showProfileResponses(): void
+{
+    showErrorsLarge("avatar") ?? null;
+    showErrorsLarge("new_username") ?? null;
+    showErrorsLarge("new_email") ?? null;
 }
 
 
@@ -64,8 +71,15 @@ function isLoggedIn(): void
  */
 function isClient(): void
 {
-    if (getCurrentUserRole() !== 1) {
-        redirectToAuth('login');
+    switch (getCurrentUserRole()) {
+        case 0:
+            redirectToAdmin("overall");
+            break;
+        case null:
+            redirectToAuth('login');
+            break;
+        default:
+            break;
     }
 }
 
@@ -103,13 +117,37 @@ function setUserSession($user): void
 /**
  * Unsets the session data for a specific user.
  *
- * @param mixed $user The user for whom the session data should be unset.
  * @return void
  */
-function unsetUserSession($user): void
+function unsetUserSession(): void
 {
     unset($_SESSION['user_id']);
     unset($_SESSION['username']);
     unset($_SESSION['email']);
     unset($_SESSION['darkmode']);
+}
+
+
+if (!function_exists('array_only')) {
+    function array_only(array $array, array $fields)
+    {
+        $result = [];
+        foreach ($array as $field => $key) {
+            if (in_array($field, $fields)) {
+                $result[$field] = $array[$field];
+            }
+        }
+        return $result;
+    }
+}
+
+if (!function_exists('array_func')) {
+    function array_func(array $functions, array $fields): void
+    {
+        foreach ($functions as $field => $rules) {
+            if (in_array($field, $fields)) {
+                $rules;
+            }
+        }
+    }
 }

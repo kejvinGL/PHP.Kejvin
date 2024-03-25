@@ -21,5 +21,7 @@
       "email": "kejvinbraka@gmail.com"
     }
   ],
-  "require": {}
+  "require": {
+    "ext-pdo": "*"
+  }
 }

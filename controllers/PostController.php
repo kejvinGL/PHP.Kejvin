@@ -2,15 +2,11 @@
 
 namespace Controllers;
 
-use Validation\PostValidator;
-use Validation\Validator;
+use Validation\CreatePostValidator;
+use Validation\DeletePostValidator;
 
 class PostController
 {
-
-    public $errors = array();
-    public $messages = array();
-    public $v;
     function index()
     {
         isClient();
@@ -22,21 +18,20 @@ class PostController
     {
         isLoggedIn();
         isClient();
-        (new PostValidator)->store($_POST);
 
-        $data = (new PostValidator)->store($_POST);
-
-        createPost($_SESSION["user_id"], $data["title"], $data["body"]);
-        $messages = ["New post created successfully."];
-        addMessages($messages);
-        redirectToHome();
+        $data = (new CreatePostValidator())->validate();
+        if (createPost($_SESSION["user_id"], $data["title"], $data["body"])) {
+            $messages["post"] = ["Post created successfully."];
+            addMessages($messages);
+            redirectToHome();
+        }
     }
 
     function destroy($id)
     {
         isLoggedIn();
 
-        $data = (new PostValidator)->destroy(["post_id" => $id]);
+        $data = (new DeletePostValidator)->destroy($id);
 
 
         if (deletePost($id)) {

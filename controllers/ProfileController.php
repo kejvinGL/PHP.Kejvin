@@ -3,13 +3,12 @@
 namespace Controllers;
 
 use Validation\deleteUserValidator;
-use Validation\UserProfileValidator;
+use Validation\UserAvatarValidator;
 use Validation\UserDetailsValidator;
+use Validation\UserPasswordValidator;
 
 class ProfileController
 {
-    public $errors = array();
-    public $messages = array();
 
 
     public function index()
@@ -25,12 +24,12 @@ class ProfileController
 
         $_SESSION['tab'] = "avatar";
 
-        $file = (new UserProfileValidator)->avatar($_FILES);
+        $file = (new UserAvatarValidator)->validate();
 
         $username = $_SESSION['username'];
         $user_id = $_SESSION['user_id'];
 
-        $this->checkChangeAvatar($user_id, $username, $file["file_ext"], $file["file_size"]);
+        $this->checkChangeAvatar($user_id, $username, $file["ext"], $file["size"]);
     }
 
 
@@ -59,8 +58,8 @@ class ProfileController
         //SET NEW AVATAR / SAVE NEW FILE
         if (setUserAvatar($saved_path, $hash_name, $file_name, $file_ext, $file_size, $user_id)) {
             move_uploaded_file($_FILES["avatar"]["tmp_name"], $file_path);
-            array_push($this->messages, "Avatar changed successfully");
-            addMessages($this->messages);
+            $messages["avatar"] = ["Avatar changed successfully"];
+            addMessages($messages);
             redirectToProfile();
         }
     }
@@ -73,7 +72,7 @@ class ProfileController
 
         $_SESSION['tab'] = "details";
 
-        $data = (new UserDetailsValidator)->validate(array_merge($_REQUEST, ["user_id" => $_SESSION["user_id"]]));
+        $data = (new UserDetailsValidator)->validate($_SESSION["user_id"]);
 
         $this->checkChangeDetails($_SESSION['username'], $_SESSION['email'], $data["new_username"], $data['new_email']);
     }
@@ -82,7 +81,7 @@ class ProfileController
     {
         if (setDetails($username, $email, $new_username, $new_email)) {
 
-            $messages[] = "User updated successfully!";
+            $messages["avatar"] = ["User updated successfully!"];
             addMessages($messages);
 
             $_SESSION['username'] = $new_username;
@@ -99,7 +98,8 @@ class ProfileController
         isLoggedIn();
 
         $_SESSION['tab'] = "password";
-        $file = (new UserProfileValidator)->password($_REQUEST);
+        $user = getCurrentUser();
+        $file = (new UserPasswordValidator)->validate($user["password"]);
 
         $user_id = $_SESSION["user_id"];
         $new_password = $file['new_password'];
@@ -112,7 +112,7 @@ class ProfileController
         $new_password = password_hash($new_password, PASSWORD_DEFAULT);
         if (setPassword($new_password, $user_id)) {
             $messages = array();
-            array_push($messages, "Password changed successfully.");
+            $messages["avatar"] = ["Password changed successfully."];
             addMessages($messages);
             redirectToProfile();
         }
@@ -127,11 +127,11 @@ class ProfileController
         isLoggedIn();
 
         $user = getCurrentUser();
-        if ($user["user_id"] != $user["user_id"]) {
+        if ($user["user_id"] != $_SESSION["user_id"]) {
             redirectToLogout();
         }
 
-        $data = (new deleteUserValidator)->validate(array_merge($_REQUEST, ["user_id" => $user["user_id"]]));
+        $data = (new deleteUserValidator)->validate($user);
 
         $this->checkDeleteSelf($user["user_id"]);
     }

@@ -258,8 +258,8 @@ function getCurrentUserRole(): int | null
 
     $user_id = $_SESSION['user_id'] ?? null;
 
-    $stmt = $pdo->prepare("SELECT role_id FROM users where user_id=$user_id");
-    $stmt->execute();
+    $stmt = $pdo->prepare("SELECT role_id FROM users where user_id = ?");
+    $stmt->execute([$user_id]);
 
     return $stmt->fetchColumn();
 }

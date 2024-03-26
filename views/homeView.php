@@ -30,7 +30,7 @@ if (empty($posts)) { ?>
             <div class="flex w-full h-1/6 items-center min-h-[45px]">
                 <div class="avatar">
                     <div class="w-9 rounded-xl">
-                        <img src="<?php echo getCurrentAvatar() ?>" />
+                        <img src="<?php echo getCurrentAvatar() ?>"  alt="avatar"/>
                     </div>
                 </div>
                 <div class="flex flex-col title w-full justify-start pl-3 ">

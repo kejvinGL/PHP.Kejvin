@@ -2,78 +2,55 @@
 
 namespace Validation;
 
-class Validator
+class Validator implements BaseValidator
+
 {
 
-    public $errors = [];
-    public $data = [];
+    public array $errors = [];
+    public array $data = [];
+    public array $fields = [];
 
-    public function clearErrors()
+    public function __construct()
+    {
+        $this->data = array_only($_REQUEST, $this->fields());
+        $this->errors = array_fill_keys($this->fields(), []);
+    }
+
+    protected function clearErrors(): void
     {
         unset($_SESSION['errors']);
     }
 
-
-    public function setFields(array $data)
-    {
-        foreach ($data as $field => $value) {
-            $this->addField($field, $value);
-        }
-    }
-
-
-    private function addField(string $field, $value)
-    {
-
-        $this->errors[$field] = [];
-        $this->data[$field] = $value;
-        return $this;
-    }
-
-    public function checkErr($field)
+    protected function checkErr($field): bool
     {
 
         return empty($this->errors[$field]);
     }
 
 
-    public function foundErrors()
+    protected function foundErrors(): void
     {
         foreach ($this->errors as $field => $errors) {
             if (!empty($errors)) {
                 addErrors($this->errors);
-                return true;
+                redirectBack();
             }
         }
-        return false;
     }
 
 
-    public function newError(string $field, string $s)
-    {
-        array_push($this->errors[$field], $s);
-        addErrors($this->errors);
-    }
-
-
-
-    public function exists(string $column, string $value, string $field, string $error = null)
+    protected function exists(string $table, string $column, string $value, string $field, string $error = null)
     {
         if ($this->checkErr($field)) {
-            if (!in_array($column, ["user_id", "username", "email"])) {
+            if (!in_array($column, ["user_id", "username", "email", 'post_id'])) {
                 array_push($this->errors[$field], "Invalid Column");
-            } elseif ($column === "username") {
-                if (!getUserByUsername($value)) {
-                    array_push($this->errors[$field], $error ?? "User does not exist");
+            } elseif ($table == "users") {
+                if (!getUserByColumn($column, $value)) {
+                    array_push($this->errors[$field], $error ??  "User does not exist");
                 }
-            } elseif ($column === "user_id") {
-                if (!getUserByID($value)) {
-                    dd($value);
-                    array_push($this->errors[$field], $error ?? "User does not exist");
-                }
-            } elseif ($column === "email") {
-                if (!getUserByEmail($value)) {
-                    array_push($this->errors[$field], $error ?? "User does not exist");
+            } elseif ($table == "posts") {
+                if (!getPostByColumn($column, $value)) {
+                    array_push($this->errors[$field], $error ??  "Post does not exist");
                 }
             }
         }
@@ -81,7 +58,7 @@ class Validator
     }
 
 
-    public function required(string $field, string $error = null)
+    protected function required(string $field, string $error = null): static
     {
         if ($this->checkErr($field)) {
             if (strlen($this->data[$field]) == 0) {
@@ -91,7 +68,7 @@ class Validator
         return $this;
     }
 
-    public function matches(string $field1, string $field2, string $error = null)
+    protected function matches(string $field1, string $field2, string $error = null): static
     {
         if ($this->checkErr($field1) && $this->checkErr($field2)) {
             if ($this->checkErr($field1)) {
@@ -103,7 +80,7 @@ class Validator
         }
         return $this;
     }
-    public function different(string $field1, string $field2, string $error = null)
+    protected function different(string $field1, string $field2, string $error = null): static
     {
         if ($this->checkErr($field1) && $this->checkErr($field2)) {
             if ($this->data[$field1] === $this->data[$field2]) {
@@ -115,18 +92,7 @@ class Validator
         }
         return $this;
     }
-
-    public function isFullname(string $field)
-    {
-        if ($this->checkErr($field)) {
-            if (!preg_match('/^[a-zA-Z ]+$/', $this->data[$field])) {
-                array_push($this->errors[$field], "Full Name is not valid");
-            }
-        }
-        return $this;
-    }
-
-    public function isEmail(string $field)
+    protected function isEmail(string $field): static
     {
         if ($this->checkErr($field)) {
             if (!filter_var($this->data[$field], FILTER_VALIDATE_EMAIL)) {
@@ -136,7 +102,7 @@ class Validator
         return $this;
     }
 
-    public function checkPassword(string $field, string $saved_password = null, string $error = null)
+    protected function checkPassword(string $field, string $saved_password = null, string $error = null): bool
     {
         if ($this->checkErr($field)) {
             if (!password_verify($this->data[$field], $saved_password)) {
@@ -147,7 +113,7 @@ class Validator
         return true;
     }
 
-    public function minLength(string $field, int $l, string $error = null)
+    protected function minLength(string $field, int $l, string $error = null): static
     {
         if ($this->checkErr($field)) {
             if (strlen($this->data[$field]) < $l) {
@@ -159,7 +125,7 @@ class Validator
     }
 
 
-    public function maxLength(string $field, int $l, string $error = null)
+    protected function maxLength(string $field, int $l, string $error = null): static
     {
         if ($this->checkErr($field)) {
             if (strlen($this->data[$field] > $l)) {
@@ -169,7 +135,7 @@ class Validator
         return $this;
     }
 
-    public function unique(string $column, string $field, array $ignore = [], string $error = null,)
+    protected function unique(string $column, string $field, array $ignore = [], string $error = null): static
     {
         if ($this->checkErr($field)) {
             if (verifyUnique($column, $this->data[$field], $ignore)) {
@@ -181,7 +147,7 @@ class Validator
         return $this;
     }
 
-    public function imgType(string $field, string $ext, string $error = null)
+    protected function imgType(string $field, string $ext, string $error = null): static
     {
 
         if ($this->checkErr($field)) {
@@ -191,11 +157,33 @@ class Validator
         }
         return $this;
     }
-    public function size(string $field, $size, string $error = null)
+    protected function size(string $field, $size, string $error = null): void
     {
         if ($this->checkErr($field)) {
             if ($size > 10485760) {
                 array_push($this->errors[$field], $error ?? "File size must be less than 10 MB");
+            }
+        }
+    }
+
+    public function validate(): array
+    {
+        return [];
+    }
+    protected function fields(): array
+    {
+        return [];
+    }
+    protected function toValidate(): array
+    {
+        return [];
+    }
+    public function saveInput(): void
+    {
+        foreach ($this->errors as $field => $value) {
+            unset($_SESSION["input"][$field]);
+            if ($this->checkErr($field)) {
+                $_SESSION["input"][$field] = $_REQUEST[$field];
             }
         }
     }

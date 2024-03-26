@@ -3,32 +3,46 @@
 namespace Controllers;
 
 use Validation\CreateUserValidator;
-use Validation\deleteUserValidator;
 use Validation\UserDetailsValidator;
+use Validation\deleteUserValidator;
 
 class AdminController
 {
     public $errors = array();
     public $messages = array();
-    public $v;
 
 
-    public function index($view)
+
+    public function showOverall()
     {
-        isAdmin();
-        view($view); // Overall/ Users / Posts / Access
+        view('overall');
     }
+
+    public function showUsers()
+    {
+        view('users');
+    }
+
+    public function showPosts()
+    {
+        view('posts');
+    }
+
+    public function showAccess()
+    {
+        view('access');
+    }
+
 
 
     //CREATE USER
 
-    function store($role)
+    function store(string $role)
     {
         isLoggedIn();
         isAdmin();
-        $data = (new CreateUserValidator)->validate($_REQUEST, $role . "-");
-
-        $this->checkNewUser($data["fullname"], $data["username"], $data["email"], $data["password"], $role);
+        $data = (new CreateUserValidator($role . "-"))->validate();
+        $this->checkNewUser($data[$role . "-fullname"], $data[$role . "-username"], $data[$role . "-email"], $data[$role . "-password"], $role);
     }
 
 
@@ -48,50 +62,52 @@ class AdminController
         $messages[$role] = array();
         array_push($messages[$role], "New " . ucfirst($role) . " created");
         addMessages($messages);
-        redirectToAdmin('access');
+        redirectBack();
     }
 
 
 
 
     //DELETE USER
-    public function destroy($user_id)
+    public function destroy(int $user_id)
     {
         isLoggedIn();
         isAdmin();
 
-        $data = (new deleteUserValidator)->validate(array_merge($_REQUEST, ['user_id' => $user_id]));
+        $user = getUserByID($user_id);
+
+        $data = (new deleteUserValidator)->validate($user);
 
         $this->checkDeleteUser($user_id);
     }
 
 
-    private function checkDeleteUser($user_id)
+    private function checkDeleteUser(int $user_id)
     {
         if (deleteUser($user_id)) {
 
             $messages["changes"] = array();
             array_push($messages["changes"], "User deleted successfully");
             addMessages($messages);
-            redirectToAdmin('users');
         } else {
 
             $errors['changes'] = array();
             array_push($errors["changes"], "User not found");
             addErrors($errors);
-            redirectToAdmin('users');
         }
+
+        redirectBack();
     }
 
 
 
 
     //CHANGE USER
-    public function edit($user_id)
+    public function edit(int $user_id)
     {
         isAdmin();
 
-        $data = (new UserDetailsValidator)->validate(array_merge($_REQUEST, ["user_id" => $user_id]));
+        $data = (new UserDetailsValidator)->validate($user_id);
 
         $user = getUserByID($user_id);
 
@@ -99,14 +115,14 @@ class AdminController
     }
 
 
-    private function checkChangeUser($username, $email, $new_username, $new_email)
+    private function checkChangeUser(string $username, string $email, string $new_username, string $new_email)
     {
         if (setDetails($username, $email, $new_username, $new_email)) {
 
             $messages['changes'] =  ["User information changed successfully"];
             addMessages($messages);
 
-            redirectToAdmin('users');
+            redirectBack();
         }
     }
 }

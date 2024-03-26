@@ -3,7 +3,7 @@
     if (!isset($_SESSION['tab'])) {
         $_SESSION['tab'] = 'avatar';
     }
-    echo showMessage() ?? null;
+    echo showMessages("avatar") ?? null;
     ?>
 </div>
 <div class="h-4/5 ">

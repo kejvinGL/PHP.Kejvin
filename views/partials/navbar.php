@@ -1,17 +1,8 @@
 <?php
-switch ($_SERVER["REQUEST_URI"]) {
-    case '/home':
-        $sticky = 'sticky';
-        break;
-    case '/users':
-        $sticky = 'sticky';
-        break;
-    case '/posts':
-        $sticky = 'sticky';
-        break;
-    default:
-        $sticky = "";
-}
+$sticky = match ($_SERVER["REQUEST_URI"]) {
+    '/home', '/users', '/posts' => 'sticky',
+    default => "",
+};
 ?>
 
 
@@ -52,7 +43,7 @@ switch ($_SERVER["REQUEST_URI"]) {
         </form>
     <?php } else { ?>
         <div class="flex-1">
-            <a class="btn btn-ghost text-xl" href="<?php $_SERVER["REQUEST_URI"] ?>">PHP.Kejvin</a>
+            <a class="btn btn-ghost text-xl" href="<?php echo $_SERVER["REQUEST_URI"] ?>">PHP.Kejvin</a>
         </div>
         <form class="m-0 size-10 " action="user/changeTheme" method="POST">
             <input type="hidden" name="_method" value="PUT">

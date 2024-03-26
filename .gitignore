@@ -4,5 +4,5 @@
 *.sql
 TODO.md
 *.bak
-
+tailwindcss.exe
 /vendor/

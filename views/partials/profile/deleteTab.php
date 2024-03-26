@@ -1,6 +1,6 @@
 <div class="flex flex-col items-center">
     <button class="btn btn-error w-[150px] mb-5" onclick="my_modal_1.showModal()">DELETE USER</button>
-    <?php echo isset($_SESSION["errors"]["delete"]) ? showErrors('delete') : null; ?>
+    <?php showErrors('delete') ?? null ?>
     <dialog id="my_modal_1" class="modal">
         <div class="modal-box">
             <h3 class="font-bold text-lg">Warning!</h3>

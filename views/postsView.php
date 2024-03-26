@@ -1,8 +1,9 @@
 <?php include "partials/admin/sideNav.php" ?>
-<main class="w-full md:ml-64 bg-base-200 h-full transition-all main active">
+<main class="w-full md:ml-64 bg-base-200 min-h-full transition-all main active">
     <div class=" flex h-14 justify-center items-center">
+        <?php showMessages("post_id") ?? null ?>
         <?php showMessages("post") ?? null ?>
-        <?php showErrorsLarge("post") ?? null ?>
+        <?php showErrorsLarge("post_id") ?? null ?>
     </div>
     <table class="table lg:text-lg">
         <thead>
@@ -23,10 +24,10 @@
                 <tr>
                     <!-- USER AVATAR -->
                     <td class="hidden md:table-cell w-1/12 pr-0">
-                        <div class="flex items-center gap-0 justify-center">
+                        <div class="flex justify-end pr-8">
                             <div class="avatar">
                                 <div class="mask mask-squircle size-6">
-                                    <img src="<?php echo getUserAvatarPath($post['user_id']) ?>">
+                                    <img src="<?php echo getUserAvatarPath($post['user_id']) ?>" alt="avatar">
                                 </div>
                             </div>
                         </div>
@@ -73,7 +74,7 @@
                                 <h3>Are you sure you want to delete this Post?</h3>
                                 <p class="text-xs text-gray-600">Press ESC to cancel</p>
                                 <div class="modal-action">
-                                    <form method="post" action="/posts/delete/<?php echo $post["post_id"] ?>" / class="w-full">
+                                    <form method="post" action="/posts/delete/<?php echo $post["post_id"] ?>" class="w-full">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <div class="flex justify-center">
                                             <input type="submit" name="delete" class="btn btn-error btn-outline btn-md text-xs" value="Delete" />

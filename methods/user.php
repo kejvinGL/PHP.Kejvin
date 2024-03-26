@@ -14,7 +14,7 @@ function createUser(int $role, string $fullname, string $username, string $email
     require "db.php";
 
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-    $stmt = $pdo->prepare("INSERT INTO users (role_id, fullname, email, username, password) VALUES (?, ?, ?, ?, ?)");
+    $pdo->$stmt = $pdo->prepare("INSERT INTO users (role_id, fullname, email, username, password) VALUES (?, ?, ?, ?, ?)");
 
     return $stmt->execute([$role, $fullname, $email, $username, $hashed_password]);
 }
@@ -31,11 +31,11 @@ function createUser(int $role, string $fullname, string $username, string $email
 function deleteUser(int $id): bool
 {
     require "db.php";
-    //Delete Media
     if (getUserByID($id) == null) {
         return false;
     }
 
+    //Delete Media
     $stmt = $pdo->prepare("DELETE FROM media WHERE user_id = ?");
     $stmt->execute([$id]);
     $folderPath = basePath("/assets/media/") . $id;
@@ -93,6 +93,15 @@ function getCurrentUser(): array | bool
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
+function getUserByColumn(string $column, string $value)
+{
+    require "db.php";
+
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE $column = ?");
+    $stmt->execute([$value]);
+
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
 
 /**
  * Retrieves a user by their ID.
@@ -240,17 +249,17 @@ function getUserAvatar(int $id): array|null
 /**
  * Retrieves the current user's role.
  *
- * @return int The current user's role as an integer
+ * @return int|null The current user's role as an integer
  * (0 - admin, 1 - client )
  */
 function getCurrentUserRole(): int | null
 {
     require "db.php";
 
-    $user_id = $_SESSION['user_id'];
+    $user_id = $_SESSION['user_id'] ?? null;
 
-    $stmt = $pdo->prepare("SELECT role_id FROM users where user_id=$user_id");
-    $stmt->execute();
+    $stmt = $pdo->prepare("SELECT role_id FROM users where user_id = ?");
+    $stmt->execute([$user_id]);
 
     return $stmt->fetchColumn();
 }
@@ -306,7 +315,7 @@ function totalAdmins(): int
 /**
  * Retrieves a list of clients from the database.
  *
- * @return mysqli_result The result set containing the clients.
+ * @return array The result set containing the clients.
  */
 function getClients(): array
 {
@@ -322,7 +331,7 @@ function getClients(): array
 /**
  * Retrieves the list of users from the database.
  *
- * @return array The result set containing the users.
+ * @return array|null The result set containing the users.
  */
 
 function getUsers(): array|null
@@ -335,7 +344,14 @@ function getUsers(): array|null
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+// function verifyRowBelongs(int $user_id, string $table, string $column, string $value)
+// {
+//     require 'db.php';
 
+//     $stmt = $pdo->prepare("SELECT COUNT(*) FROM $table WHERE user_id = ? and $column = ?");
+//     $stmt->execute([$user_id, $value]);
+//     $count = $stmt->fetchColumn();
+// }
 
 
 function verifyUnique($column, string $value, array $ignore = []): bool
@@ -345,14 +361,13 @@ function verifyUnique($column, string $value, array $ignore = []): bool
     if (empty($ignore)) {
         $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE $column = ?");
         $stmt->execute([$value]);
-        $count = $stmt->fetchColumn();
     } else {
         $inQuery = implode(',', array_fill(0, count($ignore), '?'));
         $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE $column = ? AND user_id NOT IN ($inQuery)");
         $params = array_merge([$value], $ignore);
         $stmt->execute($params);
-        $count = $stmt->fetchColumn();
     }
+    $count = $stmt->fetchColumn();
 
     return $count == 0;
 }
@@ -420,7 +435,7 @@ function setPassword(string $new, int $id): bool
 
     $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE user_id= ?");
 
-    return $stmt->execute([$new, $id]);;
+    return $stmt->execute([$new, $id]);
 }
 
 

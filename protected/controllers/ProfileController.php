@@ -3,12 +3,12 @@
 namespace Controllers;
 
 use Validation\deleteUserValidator;
+use Validation\UserAvatarValidator;
 use Validation\UserDetailsValidator;
+use Validation\UserPasswordValidator;
 
 class ProfileController
 {
-    public $errors = array();
-    public $messages = array();
 
 
     public function index()
@@ -24,27 +24,12 @@ class ProfileController
 
         $_SESSION['tab'] = "avatar";
 
-        $this->v->setFields($_FILES);
+        $file = (new UserAvatarValidator)->validate();
 
         $username = $_SESSION['username'];
         $user_id = $_SESSION['user_id'];
-        $file_ext = strtolower(pathinfo(basename($_FILES["avatar"]["name"]), PATHINFO_EXTENSION));
-        $file_size = $_FILES['avatar']['size'];
 
-        $this->checkFileReq($file_ext, $file_size);
-        $this->checkChangeAvatar($user_id, $username, $file_ext, $file_size);
-    }
-
-
-    private function checkFileReq($file_ext, $file_size)
-    {
-        $this->v->imgType("avatar", $file_ext);
-
-        $this->v->size("avatar", $file_size);
-
-        if ($this->v->foundErrors()) {
-            redirectToProfile();
-        }
+        $this->checkChangeAvatar($user_id, $username, $file["ext"], $file["size"]);
     }
 
 
@@ -73,9 +58,9 @@ class ProfileController
         //SET NEW AVATAR / SAVE NEW FILE
         if (setUserAvatar($saved_path, $hash_name, $file_name, $file_ext, $file_size, $user_id)) {
             move_uploaded_file($_FILES["avatar"]["tmp_name"], $file_path);
-            array_push($this->messages, "Avatar changed successfully");
-            addMessages($this->messages);
-            redirectToProfile();
+            $messages["avatar"] = ["Avatar changed successfully"];
+            addMessages($messages);
+            redirectBack();
         }
     }
 
@@ -84,10 +69,10 @@ class ProfileController
     public function changeDetails()
     {
         isLoggedIn();
+
         $_SESSION['tab'] = "details";
-        $data = (new UserDetailsValidator)->validate(array_merge($_REQUEST, ["user_id" => $_SESSION["user_id"]]));
 
-
+        $data = (new UserDetailsValidator)->validate($_SESSION["user_id"]);
 
         $this->checkChangeDetails($_SESSION['username'], $_SESSION['email'], $data["new_username"], $data['new_email']);
     }
@@ -96,13 +81,13 @@ class ProfileController
     {
         if (setDetails($username, $email, $new_username, $new_email)) {
 
-            $messages[] = "User updated successfully!";
+            $messages["avatar"] = ["User updated successfully!"];
             addMessages($messages);
 
             $_SESSION['username'] = $new_username;
             $_SESSION['email'] = $new_email;
 
-            redirectToProfile();
+            redirectBack();
         }
     }
 
@@ -113,47 +98,23 @@ class ProfileController
         isLoggedIn();
 
         $_SESSION['tab'] = "password";
-
-        $this->v->clearErrors();
-        $this->v->setFields($_POST);
+        $user = getCurrentUser();
+        $file = (new UserPasswordValidator)->validate($user["password"]);
 
         $user_id = $_SESSION["user_id"];
-        $new_tried = $_POST['new_password'];
-
-        $this->checkPasswordForm();
-        $this->checkChangePassword($new_tried, $user_id);
+        $new_password = $file['new_password'];
+        $this->checkChangePassword($new_password, $user_id);
     }
 
 
-    private function checkPasswordForm()
+    private function checkChangePassword($new_password, $user_id)
     {
-
-        $this->v->required("current_password", "Current password must be entered.")
-            ->required("new_password")
-            ->required("repeat_password")
-            ->minLength("new_password", 8)
-            ->matches("new_password", "repeat_password", "New Passwords must match.")
-            ->different("new_password", "current_password", "New Password must be different.");
-
-
-        $user = getCurrentUser();
-        $old_password = $user['password'];
-        $this->v->checkPassword("current_password", $old_password, "Incorrect Current Password");
-
-        if ($this->v->foundErrors()) {
-            redirectToProfile();
-        }
-    }
-
-
-    private function checkChangePassword($new_tried, $user_id)
-    {
-        $new_tried = password_hash($new_tried, PASSWORD_DEFAULT);
-        if (setPassword($new_tried, $user_id)) {
+        $new_password = password_hash($new_password, PASSWORD_DEFAULT);
+        if (setPassword($new_password, $user_id)) {
             $messages = array();
-            array_push($messages, "Password changed successfully.");
+            $messages["avatar"] = ["Password changed successfully."];
             addMessages($messages);
-            redirectToProfile();
+            redirectBack();
         }
     }
 
@@ -166,11 +127,11 @@ class ProfileController
         isLoggedIn();
 
         $user = getCurrentUser();
-        if ($user["user_id"] != $user["user_id"]) {
+        if ($user["user_id"] != $_SESSION["user_id"]) {
             redirectToLogout();
         }
 
-        $data = (new deleteUserValidator)->validate(array_merge($_REQUEST, ["user_id" => $user["user_id"]]));
+        $data = (new deleteUserValidator)->validate($user);
 
         $this->checkDeleteSelf($user["user_id"]);
     }

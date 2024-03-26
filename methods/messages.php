@@ -6,34 +6,19 @@
  * @param array $messages An array of messages to be added.
  * @return void
  */
-function addMessages($messages)
+function addMessages(array $messages): void
 {
     $_SESSION['messages'] = $messages;
 }
 
 
 /**
- * Displays a message to the user if there is only one message in the session.
- *
- * @return void
- */
-function showMessage()
-{
-
-    if (isset($_SESSION['messages'])) {
-        echo '<span class="text-lg text-green-600">' . $_SESSION["messages"][0] . '</span> <br>';
-        emptyMessages();
-    }
-    emptyMessages();
-}
-
-
-/**
  * Displays a message to the user if there is an array of messages in the session.
  *
+ * @param $input
  * @return void
  */
-function showMessages($input)
+function showMessages($input): void
 {
     if (isset($_SESSION['messages'][$input])) {
         foreach ($_SESSION['messages'][$input] as  $message) {
@@ -44,14 +29,13 @@ function showMessages($input)
 }
 
 
-
-
 /**
  * Removes all messages from the session.
  *
+ * @param $input
  * @return void
  */
-function emptyMessages()
+function emptyMessages($input): void
 {
-    unset($_SESSION['messages']);
+    unset($_SESSION['messages'][$input]);
 }

@@ -52,7 +52,7 @@ class Router
             }
         }
         http_response_code(404);
-        require "views/404.php";
+        require "protected/views/404.php";
         echo "Route not found for URI: $uri and Method: $method";
         die();
     }

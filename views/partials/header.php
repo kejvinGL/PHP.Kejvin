@@ -22,6 +22,8 @@ switch ($_SERVER["REQUEST_URI"]) {
     break;
 }
 ?>
+<html lang="en" data-theme='<?php if (!isset($_SESSION['darkmode'])) $_SESSION['darkmode'] = true;
+                            echo $_SESSION['darkmode'] ? "black" : "retro" ?>'>
 
 <head>
   <meta charset="UTF-8">
@@ -29,24 +31,17 @@ switch ($_SERVER["REQUEST_URI"]) {
   <link rel="stylesheet" href="/assets/styles/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link href="https://cdn.jsdelivr.net/npm/daisyui@4.7.2/dist/full.min.css" rel="stylesheet" type="text/css" />
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="/assets/styles/output.css" rel="stylesheet">
   <!DOCTYPE html>
-  <html lang="en" data-theme='<?php if (!isset($_SESSION['darkmode'])) $_SESSION['darkmode'] = true;
-                              echo $_SESSION['darkmode'] ? "black" : "retro" ?>'>
+
   <title> <?php echo $title ?> </title>
 </head>
 
 <?php
 include "navbar.php";
-switch ($_SERVER["REQUEST_URI"]) {
-  case '/home':
-  case '/users':
-  case '/posts':
-    $body = '<body class="overflow-y-auto h-max">';
-    break;
-  default:
-    $body = '<body class="overflow-hidden h-full">';
-    break;
-}
+$body = match ($_SERVER["REQUEST_URI"]) {
+  '/home', '/users', '/posts' => '<body class="overflow-y-auto min-h-full h-full">',
+  default => '<body class="overflow-hidden h-full">',
+};
 
 echo $body;

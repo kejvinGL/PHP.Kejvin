@@ -4,7 +4,7 @@ function createPost($id, $title, $body)
 {
     require "db.php";
     $stmt = $pdo->prepare("INSERT INTO posts (title, body, user_id) VALUES (?, ?, ?)");
-    $stmt->execute([$title, $body, $id]);
+    return $stmt->execute([$title, $body, $id]);
 }
 
 
@@ -20,7 +20,7 @@ function deletePost($id): bool
 
     $stmt = $pdo->prepare("DELETE FROM posts WHERE post_id = ?");
     $result = $stmt->execute([$id]);
-    return $result ? true : false;
+    return (bool)$result;
 }
 
 
@@ -73,19 +73,28 @@ function recentPosts(): int
  * @param int $id The ID of the user.
  * @return int The total number of posts for the user.
  */
-function totalUserPosts($id): int
+function totalUserPosts(int $id): int
 {
     require "db.php";
 
     $stmt = $pdo->prepare("SELECT * FROM posts  WHERE user_id= ? ;");
     $stmt->execute([$id]);
     return $stmt->rowCount();
-
-    return mysqli_num_rows($result);
 }
 
 
-function getPostByID($id)
+function getPostByColumn($column, $value): array | bool
+{
+    require "db.php";
+
+    $stmt = $pdo->prepare("SELECT * FROM posts WHERE $column = ?;");
+    $stmt->execute([$value]);
+
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+
+function getPostByPostID($id)
 {
     require "db.php";
 

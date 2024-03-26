@@ -2,9 +2,10 @@
   "name": "kejvin/php.kejvin",
   "autoload": {
     "psr-4": {
-      "Router\\": "controllers",
-      "Validation\\": "validation",
-      "Controllers\\": "controllers"
+      "Router\\": "protected/",
+      "Database\\": "protected/",
+      "Validation\\": "protected/validation",
+      "Controllers\\": "protected/controllers"
     },
     "files": [
       "methods/user.php",

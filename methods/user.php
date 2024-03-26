@@ -14,7 +14,7 @@ function createUser(int $role, string $fullname, string $username, string $email
     require "db.php";
 
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-    $stmt = $pdo->prepare("INSERT INTO users (role_id, fullname, email, username, password) VALUES (?, ?, ?, ?, ?)");
+    $pdo->$stmt = $pdo->prepare("INSERT INTO users (role_id, fullname, email, username, password) VALUES (?, ?, ?, ?, ?)");
 
     return $stmt->execute([$role, $fullname, $email, $username, $hashed_password]);
 }
@@ -31,11 +31,11 @@ function createUser(int $role, string $fullname, string $username, string $email
 function deleteUser(int $id): bool
 {
     require "db.php";
-    //Delete Media
     if (getUserByID($id) == null) {
         return false;
     }
 
+    //Delete Media
     $stmt = $pdo->prepare("DELETE FROM media WHERE user_id = ?");
     $stmt->execute([$id]);
     $folderPath = basePath("/assets/media/") . $id;

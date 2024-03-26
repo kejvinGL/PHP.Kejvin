@@ -22,7 +22,7 @@ class CreatePostValidator extends Validator
     {
         return [
             'title' => $this->required("title", "Post title cannot be empty"),
-            'body' => $this->required("body", "Post body cannot be empty")
+            'body' => $this->required("body", "Post body cannot be empty")->maxLength("body", 500, "Post cannot be longer than 500 characters")
         ];
     }
 

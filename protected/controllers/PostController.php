@@ -20,7 +20,7 @@ class PostController
         isClient();
 
         $data = (new CreatePostValidator())->validate();
-        if (createPost($_SESSION["user_id"], $data["title"], $data["body"])) {
+        if (createPost($_SESSION["user_id"], $data["title"], trim($data["body"]))) {
             $messages["post"] = ["Post created successfully."];
             addMessages($messages);
             redirectBack();

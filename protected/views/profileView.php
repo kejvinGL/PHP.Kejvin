@@ -3,7 +3,7 @@
     if (!isset($_SESSION['tab'])) {
         $_SESSION['tab'] = 'avatar';
     }
-    echo showMessages("avatar") ?? null;
+    showProfileResponses();
     ?>
 </div>
 <div class="h-4/5 ">
@@ -17,4 +17,4 @@
     <div class="divider"></div>
     <?php include 'partials/profile/deleteTab.php' ?>
 </div>
-<script src="assets/js/enableInput.js"></script>
+<script src="../../assets/js/enableInput.js"></script>

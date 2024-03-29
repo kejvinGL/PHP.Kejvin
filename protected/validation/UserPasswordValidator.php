@@ -11,8 +11,6 @@ class UserPasswordValidator extends Validator
 
         array_func($this->toValidate($old), $this->fields());
 
-
-        $this->checkPassword("current_password", $old, "Incorrect Current Password");
         // IF ERRORS WHERE FOUND:
         $this->foundErrors();
 

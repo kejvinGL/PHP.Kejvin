@@ -2,17 +2,14 @@
   "name": "kejvin/php.kejvin",
   "autoload": {
     "psr-4": {
-      "Router\\": "protected/",
-      "Database\\": "protected/",
+      "Core\\": "protected/Core",
       "Validation\\": "protected/validation",
-      "Controllers\\": "protected/controllers"
+      "Controllers\\": "protected/controllers",
+      "Controllers\\Admin\\": "protected/controllers/admin",
+      "Controllers\\Client\\": "protected/controllers/client",
+      "Models\\": "protected/models"
     },
     "files": [
-      "methods/user.php",
-      "methods/navigation.php",
-      "methods/messages.php",
-      "methods/post.php",
-      "methods/errors.php",
       "helpers.php"
     ]
   },
@@ -22,5 +19,7 @@
       "email": "kejvinbraka@gmail.com"
     }
   ],
-  "require": {}
+  "require": {
+    "ext-pdo": "*"
+  }
 }

@@ -1,119 +1,92 @@
 <?php
 
+use Controllers\Admin\AdminController;
 use Controllers\AuthController;
-use Controllers\AdminController;
+use Controllers\Client\ClientController;
 use Controllers\PostController;
 use Controllers\ThemeController;
 use Controllers\ProfileController;
 
-
 //VIEWS
-$router->get('/index.php', function () {
-    $post = new PostController();
-    $post->index();
-});
 $router->get('/', function () {
-    $post = new PostController();
-    $post->index();
-});
+    ClientController::index();
+}, ['isLoggedIn', 'isClient']);
 $router->get('/login', function () {
-    $auth = new AuthController();
-    $auth->showLogin();
-});
+    AuthController::showLogin();
+}, ['isLoggedIn']);
 $router->get('/register', function () {
-    $auth = new AuthController();
-    $auth->showRegister();
-});
+    AuthController::showRegister();
+}, ['isLoggedIn']);
 $router->get('/overall', function () {
-    $admin = new AdminController();
-    $admin->showOverall();
-});
+    AdminController::showOverall();
+}, ["isLoggedIn", "isAdmin"]);
 $router->get('/users', function () {
-    $admin = new AdminController();
-    $admin->showUsers();
-});
+    AdminController::showUsers();
+}, ['isLoggedIn', 'isAdmin']);
 $router->get('/posts', function () {
-    $admin = new AdminController();
-    $admin->showPosts();
-});
+    AdminController::showPosts();
+}, ['isLoggedIn', 'isAdmin']);
 $router->get('/access', function () {
-    $admin = new AdminController();
-    $admin->showAccess();
-});
-
+    AdminController::showAccess();
+}, ['isLoggedIn', 'isAdmin']);
 $router->get('/home', function () {
-    $post = new PostController();
-    $post->index();
-});
+    ClientController::index();
+}, ['isLoggedIn', 'isClient']);
 
 $router->get('/profile', function () {
-    $profile = new ProfileController();
-    $profile->index();
-});
-
-
+    ProfileController::index();
+}, ['isLoggedIn']);
 
 
 // AUTHENTICATION
 $router->post('/auth/register', function () {
-    $auth = new AuthController();
-    $auth->store("");
+    AuthController::store();
 });
 $router->get('/auth/login', function () {
-    $auth = new AuthController();
-    $auth->login();
+    AuthController::login();
 });
 $router->get('/auth/logout', function () {
-    $auth = new AuthController();
-    $auth->logout();
+    AuthController::logout();
 });
 
-
+//ADMIN FUNCTIONS
 $router->post('/admin/create/{role}', function ($params) {
-    $admin = new AdminController();
-    $admin->store($params['role']);
-});
+    AdminController::store($params['role']);
+}, ["isLoggedIn", "isAdmin"]);
 $router->delete('/admin/delete/{user_id}', function ($params) {
-    $admin = new AdminController();
-    $admin->destroy($params['user_id']);
-});
+    AdminController::destroy($params['user_id']);
+}, ["isLoggedIn", "isAdmin"]);
 $router->put('/admin/change/{user_id}', function ($params) {
-    $admin = new AdminController();
-    $admin->edit($params['user_id']);
-});
+    AdminController::edit($params['user_id']);
+}, ["isLoggedIn", "isAdmin"]);
 
-
+//PROFILE FUNCTiONS
 $router->put('/profile/avatar', function () {
-    $profile = new ProfileController();
-    $profile->changeAvatar();
-});
+    ProfileController::changeAvatar();
+}, ["isLoggedIn"]);
 $router->put('/profile/details', function () {
     $profile = new ProfileController();
     $profile->changeDetails();
-});
+    ProfileController::changeDetails();
+}, ["isLoggedIn"]);
 $router->put('/profile/password', function () {
-    $profile = new ProfileController();
-    $profile->changePassword();
-});
+    ProfileController::changePassword();
+}, ["isLoggedIn"]);
 $router->delete('/profile/deleteSelf', function () {
-    $profile = new ProfileController();
-    $profile->deleteSelf();
-});
+    ProfileController::deleteSelf();
+}, ["isLoggedIn"]);
 
 
-
+//POST FUNCTIONS
 $router->post('/posts/create', function () {
-    $post = new PostController();
-    $post->store();
+    PostController::store();
 });
-
 $router->delete('/posts/delete/{post_id}', function ($params) {
-    $post = new PostController();
-    $post->destroy($params['post_id']);
+    PostController::destroy($params['post_id']);
 });
 
 
+//THEME CHANGER
 $router->put('/user/changeTheme', function () {
-    $user = new ThemeController();
-    $user->changeTheme();
+    ThemeController::changeTheme();
 });

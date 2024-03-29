@@ -56,26 +56,26 @@
 <div class="fixed left-0 top-0 w-64 h-full bg-base-100 p-4 mt-16 z-50 sidebar-menu transition-transform -translate-x-full">
     <ul class="mt-4">
         <li class="mb-1 group">
-            <a href="overall" class="flex font-semibold items-center py-2 px-4 text-neutral-700 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
+            <a href="/overall" class="flex font-semibold items-center py-2 px-4 text-neutral-700 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
                 <i class="fa-solid fa-border-all mr-2"></i>
                 <span class="text-sm">Dashboard</span>
             </a>
         </li>
         <li class="mb-1 group">
-            <a href="users" class="flex font-semibold items-center py-2 px-4 text-neutral-700 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
+            <a href="/users" class="flex font-semibold items-center py-2 px-4 text-neutral-700 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
                 <i class="fa-solid fa-users mr-2"></i>
                 <span class="text-sm">Users</span>
             </a>
         </li>
         <li class="mb-1 group">
-            <a href="posts" class="flex font-semibold items-center py-2 px-4 text-neutral-700 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
+            <a href="/posts" class="flex font-semibold items-center py-2 px-4 text-neutral-700 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
                 <i class="fa-solid fa-inbox mr-2"></i>
                 <span class="text-sm">Posts</span>
             </a>
         </li>
 
         <li class="mb-1 group">
-            <a href="access" class="flex font-semibold items-center py-2 px-4 text-neutral-700 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
+            <a href="/access" class="flex font-semibold items-center py-2 px-4 text-neutral-700 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
                 <i class="fa-solid fa-lock mr-2"></i>
                 <span class="text-sm">Access</span>
             </a>

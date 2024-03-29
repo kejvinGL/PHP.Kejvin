@@ -12,8 +12,6 @@ class CreatePostValidator extends Validator
 
         $this->foundErrors();
 
-        redirectBack();
-
         return $this->data;
     }
 

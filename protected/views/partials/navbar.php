@@ -12,7 +12,7 @@ $sticky = match ($_SERVER["REQUEST_URI"]) {
 
         <div class="flex-1">
 
-            <?php if (getCurrentUserRole() === 0 && $_SERVER["REQUEST_URI"] != "/profile") { ?>
+            <?php if (\Models\User::getCurrentRole() === 0 && $_SERVER["REQUEST_URI"] != "/profile") { ?>
                 <button type="button" class="text-lg text-neutral-400 size-10 btn btn-ghost sidebar-toggle">
                     <i class="fa-solid fa-bars"></i>
                 </button>
@@ -26,7 +26,7 @@ $sticky = match ($_SERVER["REQUEST_URI"]) {
         <div class="dropdown dropdown-end">
             <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar mx-4 flex">
                 <div class="w-10 rounded-full">
-                    <img alt="avatar" src="<?php echo getCurrentAvatar() ?>" />
+                    <img alt="avatar" src="<?php echo \Models\User::getCurrentAvatar() ?>" />
                 </div>
             </div>
             <ul tabindex="0" class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">

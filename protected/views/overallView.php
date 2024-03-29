@@ -7,14 +7,14 @@
                     <i class="fa-regular fa-user fa-2xl"></i>
                 </div>
                 <div class="stat-title">Total Clients</div>
-                <div class="stat-value"><?php echo totalClients() ?></div>
+                <div class="stat-value"><?php echo $data['totalClients'] ?></div>
             </div>
             <div class="stat bg-base-100">
                 <div class="stat-figure text-secondary pr-3">
                     <i class="fa-solid fa-hammer fa-2xl"></i>
                 </div>
                 <div class="stat-title">Total Admins</div>
-                <div class="stat-value"><?php echo totalAdmins() ?></div>
+                <div class="stat-value"><?php echo $data['totalAdmins'] ?></div>
 
             </div>
 
@@ -25,12 +25,12 @@
                     <i class="fa-solid fa-inbox fa-2xl"></i>
                 </div>
                 <div class="stat-title">Total Number of Posts</div>
-                <div class="stat-value"><?php echo totalPosts() ?></div>
-                <div class="stat-desc"><?php echo recentPosts() . "(last 24h)" ?></div>
+                <div class="stat-value"><?php echo $data['totalPosts'] ?></div>
+                <div class="stat-desc"><?php echo $data['recentPosts'] ?></div>
             </div>
         </div>
 
     </div>
 </main>
 
-<script src="assets/js/sidebar.js"></script>
+<script src="../../assets/js/sidebar.js"></script>

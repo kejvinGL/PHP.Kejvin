@@ -1,4 +1,19 @@
+<div class="area">
+    <ul class="circles">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+</div>
 <div class="h-1/5">
+    <?php showErrors('user') ?? null ?>
 </div>
 <div class="h-4/5 w-1/2">
     <div class=" flex flex-col items-center justify-between w-full h-[420px]">

@@ -2,42 +2,40 @@
 
 namespace Controllers;
 
+use Models\Post;
 use Validation\CreatePostValidator;
 use Validation\DeletePostValidator;
+use Validation\Validator;
 
 class PostController
 {
-    function index(): void
+
+    public static function store(): void
     {
-        isClient();
-        view('home');
-    }
+        try {
+            $data = (new CreatePostValidator())->validate();
 
-
-    function store(): void
-    {
-        isLoggedIn();
-        isClient();
-
-        $data = (new CreatePostValidator())->validate();
-        if (createPost($_SESSION["user_id"], $data["title"], trim($data["body"]))) {
-            $messages["post"] = ["Post created successfully."];
-            addMessages($messages);
-            redirectBack();
+            if (Post::insert(['title' => $data['title'], 'body' => $data['body'], 'user_id' => $_SESSION['user_id']])) {
+                $messages["post"] = ["Post created successfully."];
+                Validator::addMessages($messages);
+            }
+        } catch (\Exception $e) {
+            Validator::addErrors(["databse" => ["An error occurred while adding post"]]);
         }
+        redirectBack();
     }
 
-    function destroy($id): void
+    public static function destroy($id): void
     {
-        isLoggedIn();
 
-        $data = (new DeletePostValidator)->destroy($id);
-
-        if (deletePost($id)) {
+        try {
+            (new DeletePostValidator)->destroy($id);
+            Post::delete(["ID" => $id]);
             $messages["post"] = ["Post deleted successfully."];
-            addMessages($messages);
-
-            redirectBack();
+            Validator::addMessages($messages);
+        } catch (\Exception $e) {
+            Validator::addErrors(["databse" => ["An error occurred while deleting post"]]);
         }
+        redirectBack();
     }
 }

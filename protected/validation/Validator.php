@@ -2,6 +2,9 @@
 
 namespace Validation;
 
+use Models\Post;
+use Models\User;
+
 class Validator implements BaseValidator
 
 {
@@ -23,7 +26,6 @@ class Validator implements BaseValidator
 
     protected function checkErr($field): bool
     {
-
         return empty($this->errors[$field]);
     }
 
@@ -32,24 +34,25 @@ class Validator implements BaseValidator
     {
         foreach ($this->errors as $field => $errors) {
             if (!empty($errors)) {
-                addErrors($this->errors);
+                self::addErrors($this->errors);
                 redirectBack();
             }
         }
     }
 
 
-    protected function exists(string $table, string $column, string $value, string $field, string $error = null)
+    protected function exists(string $table, string $column, string $value, string $field, string $error = null): static
     {
         if ($this->checkErr($field)) {
             if (!in_array($column, ["user_id", "username", "email", 'post_id'])) {
                 array_push($this->errors[$field], "Invalid Column");
             } elseif ($table == "users") {
-                if (!getUserByColumn($column, $value)) {
+
+                if (!User::select([$column => $value])) {
                     array_push($this->errors[$field], $error ??  "User does not exist");
                 }
             } elseif ($table == "posts") {
-                if (!getPostByColumn($column, $value)) {
+                if (!Post::select([$column => $value])) {
                     array_push($this->errors[$field], $error ??  "Post does not exist");
                 }
             }
@@ -128,7 +131,7 @@ class Validator implements BaseValidator
     protected function maxLength(string $field, int $l, string $error = null): static
     {
         if ($this->checkErr($field)) {
-            if (strlen($this->data[$field] > $l)) {
+            if (strlen($this->data[$field]) > $l) {
                 array_push($this->errors[$field], $error ?? ucwords(str_replace(["_", "-"], " ", $field)) . " must be less than $l characters");
             }
         }
@@ -138,7 +141,7 @@ class Validator implements BaseValidator
     protected function unique(string $column, string $field, array $ignore = [], string $error = null): static
     {
         if ($this->checkErr($field)) {
-            if (verifyUnique($column, $this->data[$field], $ignore)) {
+            if (self::verifyUnique($column, $this->data[$field], $ignore)) {
                 return $this;
             } else {
                 array_push($this->errors[$field], $error ?? ucwords(str_replace(["_", "-"], " ", $field)) . " is not unique");
@@ -157,13 +160,14 @@ class Validator implements BaseValidator
         }
         return $this;
     }
-    protected function size(string $field, $size, string $error = null): void
+    protected function size(string $field, $size, string $error = null): static
     {
         if ($this->checkErr($field)) {
             if ($size > 10485760) {
                 array_push($this->errors[$field], $error ?? "File size must be less than 10 MB");
             }
         }
+        return $this;
     }
 
     public function validate(): array
@@ -185,6 +189,33 @@ class Validator implements BaseValidator
             if ($this->checkErr($field)) {
                 $_SESSION["input"][$field] = $_REQUEST[$field];
             }
+        }
+    }
+
+    public function clearInput(): void
+    {
+        foreach ($this->errors as $field => $value) {
+            unset($_SESSION["input"][$field]);
+        }
+    }
+
+    public static function addErrors(array $errors): void
+    {
+        $_SESSION["errors"] = $errors;
+    }
+
+    public static function addMessages(array $messages): void
+    {
+        $_SESSION['messages'] = $messages;
+    }
+
+    private static function verifyUnique($column, string $value, array $ignore = []): bool
+    {
+        if (empty($ignore)) {
+            return !User::select([$column => $value]);
+        } else {
+            $inQuery = implode(',', array_fill(0, count($ignore), '?'));
+            return empty(User::query("SELECT * FROM users WHERE $column = ? AND  ID NOT IN ($inQuery)", array_merge([$value], $ignore)));
         }
     }
 }

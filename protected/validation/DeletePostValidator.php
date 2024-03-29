@@ -2,6 +2,9 @@
 
 namespace Validation;
 
+use Models\Post;
+use Models\User;
+
 class DeletePostValidator extends Validator
 {
 
@@ -13,9 +16,9 @@ class DeletePostValidator extends Validator
 
         $this->foundErrors();
 
-        $this->data = getPostByPostID($id);
+        $this->data = Post::select(["ID" => $id])[0];
 
-        if (getCurrentUserRole() === 1 && $_SESSION["user_id"] !== $this->data["user_id"]) {
+        if (User::getCurrentRole() === 1 && $_SESSION["user_id"] !== $this->data["user_id"]) {
             http_response_code(400);
             $this->errors["post_id"] += ["Not authorised to delete Post"];
         }

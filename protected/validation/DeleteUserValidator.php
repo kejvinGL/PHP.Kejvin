@@ -2,18 +2,25 @@
 
 namespace Validation;
 
+use Models\User;
+
 class DeleteUserValidator extends Validator
 {
 
-    public function validate(array $user = null): array
+    public function validate(?array $user = []): array
     {
         $this->clearErrors();
-        $this->data += ['user_id' => $user["user_id"], 'saved_password' => getCurrentUser()["password"]];
+
+        $this->data += [
+            "user_id" => $user["ID"],
+            "saved_password" => User::select(["ID"=> $_SESSION["user_id"]])[0]["password"]
+        ];
+
 
         array_func($this->toValidate(), $this->fields());
-        // IF ERRORS WHERE FOUND:
 
-       $this->foundErrors();
+        // IF ERRORS WHERE FOUND:
+        $this->foundErrors();
 
 
         return $this->data;

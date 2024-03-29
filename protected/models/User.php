@@ -2,52 +2,77 @@
 
 namespace Models;
 
-use Database\DatabaseConnect;
-
-class User implements BaseModel
+class User extends Model implements BaseModel
 {
-    private int $id;
-    private int $roleId;
-    private string $fullname;
-    private string $email;
-    private string $password;
-    private string $username;
-    public $db;
+    protected static string $table = "users";
+    protected static array $fields = ['role_id',  'fullname', 'email', 'username', 'password', "last_login"];
 
-    public function __construct(int $roleId, string $fullname, string $email, string $password, string $username)
+
+
+    public static function getUsername($id)
     {
-        $this->roleId = $roleId;
-        $this->fullname = $fullname;
-        $this->email = $email;
-        $this->username = $username;
-        $this->password = $password;
-        $this->db = new DatabaseConnect;
-        $this->id = $this->db->insert("users", ["role_id" => $roleId, "fullname" => $fullname, "email" => $email,  "username" => $username, "password" => $password]);
+        return User::select(['ID' => $id])[0]["username"];
     }
 
-    public function select(
-        array $conditions = [],
-        ?array $columns = ["*"],
-        ?string $joinType = "",
-        ?string $joinTable = "",
-        ?array $joinColumn = [],
-        int $limit = 0,
-        string $orderBy = "",
-        string $order = "",
-    ): array {
-        return $this->db->select("users", $conditions, $columns, $joinType, $joinTable, $joinColumn, $limit, $orderBy, $order);
+
+    public static function getLastLogin($id)
+    {
+        return User::select(['ID' => $id])[0]["last_login"];
+    }
+    public static function getAvatar(int $id): array|null
+    {
+
+        return Media::select(["user_id" => $id, "type" => "avatar"])[0];
+    }
+    public static function getCurrentAvatar()
+    {
+        $user_id = $_SESSION['user_id'];
+        $avatar = Media::select(["user_id" => $user_id, "type" => "avatar"])[0];
+        return !empty($avatar) ? "assets/media/" . $avatar["path"] : "assets/media/default/default.svg";
+    }
+    public static function getAvatarPath(int $id): string
+    {
+
+        $avatar = Media::select(["user_id" => $id, "type" => "avatar"]);
+        return $avatar ? "assets/media/" . $avatar[0]["path"] : "assets/media/default/default.svg";
     }
 
-    public function update(array $data = [], array $conditions = []): int
+    public static function hasAvatar(int $id): bool
     {
-        return $this->db->update("users", $data, $conditions);
+        return !empty(Media::select(["user_id" => $id, "type" => "avatar"]));
     }
-    public function delete(array $conditions = []): int
+
+
+    public static function getCurrentRole(): int | null
     {
-        return $this->db->delete("users", $conditions);
+        $user_id = $_SESSION['user_id'] ?? null;
+        return User::select(['ID' => $user_id])[0]["role_id"];
     }
-    public function all(): array
+
+    public static function getRole(int $id): int
     {
-        return $this->db->select("users");
+        return User::select(['ID' => $id])[0]["role_id"];
     }
+
+
+    public static function totalClients(): int
+    {
+
+        return count(User::select(["role_id" => 1]));
+    }
+
+
+    public static function totalAdmins(): int
+    {
+        return count(User::select(["role_id" => 0]));
+    }
+
+
+    public static function setTheme(): bool
+    {
+        $mode = $_SESSION["darkmode"];
+        $username = $_SESSION["username"];
+        return User::update(['darkmode' => $mode], ['username' => $username]);
+    }
+
 }

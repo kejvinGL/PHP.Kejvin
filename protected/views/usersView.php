@@ -6,9 +6,9 @@
         ?>
 
     </div>
-    <table class="table lg:text-lg">
+    <table class="table rounded-xl lg:text-lg border-separate border-spacing-2">
         <thead>
-            <tr>
+            <tr class="border border-accent border-spacing-2 bg-base-300">
                 <th class="hidden md:table-cell"></th>
                 <th>Full Name</th>
                 <th>Username</th>
@@ -19,30 +19,30 @@
             </tr>
         </thead>
         <tbody>
-            <?php $users = getUsers();
-            foreach ($users as $user) {
+            <?php
+            foreach ($data as $user) {
             ?>
-                <tr>
+                <tr class="border-b border-accent border-spacing-2">
                     <!-- USER AVATAR -->
-                    <td class="hidden md:table-cell w-1/12 pr-0">
+                    <td class="bg-base-100 hidden md:table-cell w-1/12 pr-0">
                         <div class="flex items-center gap-0 justify-center">
                             <div class="avatar">
                                 <div class="mask mask-squircle size-6">
-                                    <img src="<?php echo getUserAvatarPath($user['user_id']) ?>"  alt="avatar"/>
+                                    <img src="<?php echo $user['avatar'] ?>" alt="avatar" />
                                 </div>
                             </div>
                         </div>
                     </td>
 
                     <!-- FULL NAME -->
-                    <td class="pr-0 md:pr-1">
+                    <td class="bg-base-100 pr-0 md:pr-1">
                         <div>
                             <div class="text-xs"><?php echo $user['fullname'] ?></div>
                         </div>
                     </td>
 
                     <!-- USERNAME & BADGE -->
-                    <td class="pr-0 md:pr-1">
+                    <td class="bg-base-100 pr-0 md:pr-1">
                         <div>
                             <?php if ($user["role_id"]) {
                                 echo '<div class="place-items-center">' . $user['username'] . '</div>';
@@ -57,27 +57,27 @@
                     </td>
 
                     <!-- EMAIL -->
-                    <td class="pr-0 md:pr-1">
+                    <td class="bg-base-100 pr-0 md:pr-1">
                         <div>
                             <div class="text-xs text-wrap"><?php echo $user['email'] ?></div>
                         </div>
                     </td>
                     <!-- LAST LOGIN -->
-                    <td class="hidden md:table-cell">
+                    <td class="bg-base-100 hidden md:table-cell">
                         <?php
                         $date = date_create($user['last_login']);
                         echo date_format($date, 'd/m/y @ H:m') ?>
                     </td>
-                    <td>
-                        <?php echo getUserRole($user['user_id']) ? totalUserPosts($user['user_id']) : "" ?>
+                    <td class="bg-base-100 ">
+                        <?php echo $user["role"] ? $user['posts'] : "" ?>
                     </td>
-                    <td class="text-nowrap ">
-                        <dialog id="<?php echo "user_" . $user["user_id"] ?>" class="modal">
+                    <td class="bg-base-100 text-nowrap ">
+                        <dialog id="<?php echo "user_" . $user["ID"] ?>" class="modal">
                             <div class="modal-box">
                                 <h3><span class="text-red-500">WARNING! </span>Editing User Information</h3>
                                 <p class="text-xs text-gray-600">Press ESC to cancel</p>
                                 <div class="modal-action">
-                                    <form method="POST" action="admin/change/<?php echo $user["user_id"] ?>" id="edit_user" class="w-full">
+                                    <form method="POST" action="admin/change/<?php echo $user["ID"] ?>" id="edit_user" class="w-full">
                                         <input type="hidden" name="_method" value="PUT">
                                         <label class="input input-bordered flex items-center gap-2">
                                             <i class="fa-solid fa-user"></i>
@@ -97,16 +97,16 @@
                                 </div>
                             </div>
                         </dialog>
-                        <button class="btn btn-accent btn-xs rounded-md" onclick="<?php echo "user_" . $user["user_id"] ?>.showModal()">
+                        <button class="btn btn-accent btn-xs rounded-md" onclick="<?php echo "user_" . $user["ID"] ?>.showModal()">
                             <i class="fa-solid fa-edit"></i>
                         </button>
-                        <dialog id="<?php echo "delete_user_" . $user["user_id"] ?>" class="modal">
+                        <dialog id="<?php echo "delete_user_" . $user["ID"] ?>" class="modal">
                             <div class="modal-box">
                                 <h3><span class="text-red-500">WARNING! </span>Deleting an user:
                                     <?php echo $user["fullname"] . " (@" . $user["username"] . ")" ?></h3>
                                 <p class="text-xs text-gray-600">Press ESC to cancel</p>
                                 <div class="modal-action flex flex-col">
-                                    <form id="delete_form" class="inline-flex join" action="/admin/delete/<?php echo $user['user_id'] ?>" method="post">
+                                    <form id="delete_form" class="inline-flex join" action="/admin/delete/<?php echo $user['ID'] ?>" method="post">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="password" name="password" class="input input-bordered join-item w-full max-w-xs" id="enter_pass" placeholder="********" />
                                         <input type="submit" name="delete" class="btn btn-outline join-item btn-error" id="deleteButton" value="Delete" />
@@ -117,7 +117,7 @@
                                 </div>
                             </div>
                         </dialog>
-                        <button class="btn btn-error btn-xs rounded-md" onclick="<?php echo "delete_user_" . $user["user_id"] ?>.showModal()">
+                        <button class="btn btn-error btn-xs rounded-md" onclick="<?php echo "delete_user_" . $user["ID"] ?>.showModal()">
                             <i class="fa-solid fa-trash"></i>
                         </button>
 
@@ -126,5 +126,5 @@
             <?php } ?>
     </table>
 </main>
-<script src="assets/js/enableInput.js"></script>
-<script src="assets/js/sidebar.js"></script>
+<script src="../../assets/js/enableInput.js"></script>
+<script src="../../assets/js/sidebar.js"></script>

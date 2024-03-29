@@ -26,6 +26,8 @@ class CreateUserValidator extends Validator
         // IF ERRORS WHERE FOUND:
         $this->foundErrors();
 
+
+        $this->clearInput();
         return $this->data;
     }
 

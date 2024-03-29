@@ -21,16 +21,15 @@
     <?php showHomeResponses() ?>
 </div>
 <?php
-$posts = getCurrentUserPosts();
-if (empty($posts)) { ?>
+if (empty($data)) { ?>
     <h3 class="align-middle m-10 text-2xl">No posts are made.</h3>
     <?php } else {
-    foreach ($posts as $post) { ?>
+    foreach ($data as $post) { ?>
         <div class="flex flex-col w-1/2 min-h-[200px] min-w-[400px] items-center bg-base-200 border border-secondary rounded-2xl p-2 mb-5">
             <div class="flex w-full h-1/6 items-center min-h-[45px]">
                 <div class="avatar">
                     <div class="w-9 rounded-xl">
-                        <img src="<?php echo getCurrentAvatar() ?>"  alt="avatar"/>
+                        <img src="<?php echo $post['avatar'] ?>" alt="avatar" />
                     </div>
                 </div>
                 <div class="flex flex-col title w-full justify-start pl-3 ">
@@ -45,12 +44,12 @@ if (empty($posts)) { ?>
                     </div>
                 </div>
                 <div class="flex delete w-1/12 justify-end pr-2">
-                    <dialog id="<?php echo "post_" . $post["post_id"] ?>" class="modal">
+                    <dialog id="<?php echo "post_" . $post['ID'] ?>" class="modal">
                         <div class="modal-box">
                             <h3>Are you sure you want to delete this Post?</h3>
                             <p class="text-xs text-gray-600">Press ESC to cancel</p>
                             <div class="modal-action">
-                                <form method="post" action="/posts/delete/<?php echo $post['post_id']; ?>" class="w-full">
+                                <form method="post" action="/posts/delete/<?php echo $post['ID']; ?>" class="w-full">
                                     <input type="hidden" name="_method" value="DELETE">
                                     <div class="flex justify-center">
                                         <input type="submit" name="delete" class="btn btn-error btn-outline btn-md text-xs" value="Delete" />
@@ -62,7 +61,7 @@ if (empty($posts)) { ?>
                             </div>
                         </div>
                     </dialog>
-                    <button class="btn btn-error btn-xs rounded-md" onclick="<?php echo "post_" . $post["post_id"] ?>.showModal()">
+                    <button class="btn btn-error btn-xs rounded-md" onclick="<?php echo "post_" . $post["ID"] ?>.showModal()">
                         <i class="fa-solid fa-trash"></i>
                     </button>
                 </div>

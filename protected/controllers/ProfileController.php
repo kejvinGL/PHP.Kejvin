@@ -2,38 +2,49 @@
 
 namespace Controllers;
 
+use Exception;
+use Models\Media;
+use Models\User;
 use Validation\deleteUserValidator;
 use Validation\UserAvatarValidator;
 use Validation\UserDetailsValidator;
 use Validation\UserPasswordValidator;
+use Validation\Validator;
 
 class ProfileController
 {
 
 
-    public function index()
+    public static function index()
     {
-        isLoggedIn();
-        view('profile');
+
+        $data = ["avatar" => User::getCurrentAvatar()];
+
+        view('profile', $data);
     }
 
     // CHANGE AVATAR
-    public function changeAvatar()
+    public static function changeAvatar()
     {
-        isLoggedIn();
 
-        $_SESSION['tab'] = "avatar";
+        try {
 
-        $file = (new UserAvatarValidator)->validate();
+            $_SESSION['tab'] = "avatar";
 
-        $username = $_SESSION['username'];
-        $user_id = $_SESSION['user_id'];
+            $file = (new UserAvatarValidator)->validate();
 
-        $this->checkChangeAvatar($user_id, $username, $file["ext"], $file["size"]);
+            $username = $_SESSION['username'];
+            $user_id = $_SESSION['user_id'];
+
+            self::checkChangeAvatar($user_id, $username, $file["ext"], $file["size"]);
+        } catch (\Exception $e) {
+            Validator::addErrors(["database" => ["An error occurred while registering"]]);
+        }
+        redirectBack();
     }
 
 
-    private function checkChangeAvatar($user_id, $username, $file_ext, $file_size)
+    private static function checkChangeAvatar($user_id, $username, $file_ext, $file_size)
     {
 
         $hash_name = bin2hex(random_bytes(20));
@@ -42,79 +53,92 @@ class ProfileController
         $file_name = $username . "_" . $user_id;
         $file_path = $target_dir . '/' . $hash_name . '.' . $file_ext;
 
-        //DELETE CURRENT AVATAR(IF EXISTS)
-        if (hasUserAvatar($user_id)) {
-            $avatar = getUserAvatar($user_id);
-            echo $target_dir . $avatar["hash_name"] . '.' . $avatar["extension"];
+        //DELETE CURRENT AVATAR(IF IT EXISTS)
+        if (User::hasAvatar($user_id)) {
+            $avatar = User::getAvatar($user_id);
             $delete_file_path = $target_dir . '/' . $avatar["hash_name"] . '.' . $avatar["extension"];
             unlink($delete_file_path);
-            deleteUserAvatar($user_id);
+            Media::delete(['user_id' => $user_id]);
         }
-        // CREATE PERSONAL DIRECTORY (IF DOES NOT EXISTS)
+        // CREATE PERSONAL DIRECTORY (IF IT DOES NOT EXIST)
         if (!is_dir($target_dir)) {
             mkdir($target_dir, 0777, true);
         }
 
         //SET NEW AVATAR / SAVE NEW FILE
-        if (setUserAvatar($saved_path, $hash_name, $file_name, $file_ext, $file_size, $user_id)) {
+        if (Media::insert([
+            "path" => $saved_path,
+            "hash_name" => $hash_name,
+            "original_name" => $file_name,
+            "extension" => $file_ext,
+            "size" => $file_size,
+            "type" => "avatar",
+            "user_id" => $_SESSION['user_id']
+        ])) {
             move_uploaded_file($_FILES["avatar"]["tmp_name"], $file_path);
             $messages["avatar"] = ["Avatar changed successfully"];
-            addMessages($messages);
-            redirectBack();
+            Validator::addMessages($messages);
         }
     }
 
 
     //CHANGE DETAILS
-    public function changeDetails()
+    public static function changeDetails(): void
     {
-        isLoggedIn();
 
-        $_SESSION['tab'] = "details";
+        try {
 
-        $data = (new UserDetailsValidator)->validate($_SESSION["user_id"]);
+            $_SESSION['tab'] = "details";
+            $data = (new UserDetailsValidator)->validate($_SESSION["user_id"]);
 
-        $this->checkChangeDetails($_SESSION['username'], $_SESSION['email'], $data["new_username"], $data['new_email']);
+            self::checkChangeDetails($_SESSION['username'], $_SESSION['email'], $data["new_username"], $data['new_email']);
+        } catch (Exception $e) {
+            Validator::addErrors(["database" => ["An error occurred while registering"]]);
+        }
+        redirectBack();
     }
 
-    private function checkChangeDetails($username, $email, $new_username, $new_email): void
+    private static function checkChangeDetails($username, $email, $new_username, $new_email): void
     {
-        if (setDetails($username, $email, $new_username, $new_email)) {
+        if (User::update(
+            ['username' => $new_username, 'email' => $new_email],
+            ['username' => $username, 'email' => $email]
+        )) {
 
             $messages["avatar"] = ["User updated successfully!"];
-            addMessages($messages);
+            Validator::addMessages($messages);
 
             $_SESSION['username'] = $new_username;
             $_SESSION['email'] = $new_email;
-
-            redirectBack();
         }
     }
 
 
     //CHANGE PASSWORD
-    public function changePassword()
+    public static function changePassword()
     {
-        isLoggedIn();
-
-        $_SESSION['tab'] = "password";
-        $user = getCurrentUser();
-        $file = (new UserPasswordValidator)->validate($user["password"]);
-
-        $user_id = $_SESSION["user_id"];
-        $new_password = $file['new_password'];
-        $this->checkChangePassword($new_password, $user_id);
+        try {
+            $_SESSION['tab'] = "password";
+            $user = User::select(['username' => $_SESSION["username"]])[0];
+            $file = (new UserPasswordValidator)->validate($user["password"]);
+            $user_id = $_SESSION["user_id"];
+            $new_password = $file['new_password'];
+            self::checkChangePassword($new_password, $user_id);
+        } catch (Exception $e) {
+            Validator::addErrors(["database" => ["An error occurred while registering"]]);
+        }
+        redirectBack();
     }
 
 
-    private function checkChangePassword($new_password, $user_id)
+    private static function checkChangePassword($new_password, $user_id)
     {
         $new_password = password_hash($new_password, PASSWORD_DEFAULT);
-        if (setPassword($new_password, $user_id)) {
+
+        if (User::update(['password' => $new_password], ['user_id' => $user_id])) {
             $messages = array();
             $messages["avatar"] = ["Password changed successfully."];
-            addMessages($messages);
-            redirectBack();
+            Validator::addMessages($messages);;
         }
     }
 
@@ -122,25 +146,28 @@ class ProfileController
 
 
     //DELETE SELF
-    public function deleteSelf()
+    public static function deleteSelf()
     {
-        isLoggedIn();
+        try {
+            $user = User::select(['username' => $_SESSION["username"]])[0];
+            if ($user["user_id"] != $_SESSION["user_id"]) {
+                header("Location: /auth/logout");
+                exit();
+            }
 
-        $user = getCurrentUser();
-        if ($user["user_id"] != $_SESSION["user_id"]) {
-            redirectToLogout();
+            $data = (new deleteUserValidator)->validate($user);
+            self::checkDeleteSelf($user["user_id"]);
+        } catch (\Exception $e) {
+            Validator::addErrors(["database" => ["An error occurred while registering"]]);
         }
-
-        $data = (new deleteUserValidator)->validate($user);
-
-        $this->checkDeleteSelf($user["user_id"]);
+        redirectBack();
     }
 
 
-    private function checkDeleteSelf($user_id)
+    private static function checkDeleteSelf($user_id)
     {
-        if (deleteUser($user_id)) {
-            redirectToLogout();
+        if (User::delete(["user_id" => $user_id])) {
+            header("/auth/logout");
         }
     }
 }

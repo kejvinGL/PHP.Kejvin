@@ -2,6 +2,8 @@
 
 namespace Validation;
 
+use Models\User;
+
 class LoginValidator extends Validator
 {
 
@@ -15,8 +17,7 @@ class LoginValidator extends Validator
         $this->saveInput();
         $this->foundErrors();
 
-
-        $user = getUserByUsername($this->data["username"]);
+        $user = User::select(['username' => $this->data['username']])[0];
         $this->exists("users", "username", $this->data["username"], "username", "User does not exist")
             ->checkPassword("password", $user['password']);
 
@@ -24,6 +25,7 @@ class LoginValidator extends Validator
 
         $this->foundErrors();
 
+        $this->clearInput();
         return $this->data;
     }
 

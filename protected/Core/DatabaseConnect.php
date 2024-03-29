@@ -1,22 +1,13 @@
 <?php
 
-namespace Database;
+namespace Core;
+
+use PDO;
+use PDOException;
+use Validation\Validator;
 
 class DatabaseConnect
 {
-    private $db_username = "root";
-    private $db_password = "";
-    private $dsn = 'mysql:host=localhost;dbname=loginpage;charset=utf8mb4';
-    public $pdo;
-    public function __construct()
-    {
-        try {
-            $this->pdo = new \PDO($this->dsn, $this->db_username, $this->db_password);
-            $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        } catch (\PDOException $e) {
-            throw new \PDOException("Database connection failed: " . $e->getMessage());
-        }
-    }
 
 
     /**
@@ -24,16 +15,17 @@ class DatabaseConnect
      *
      * @param string $table The name of the table to select from.
      * @param array $conditions An associative array of conditions to filter the records (optional).
-     * @param array $columns An array of columns to select (optional, default is ["*"]).
+     * @param string|null $joinType
+     * @param string|null $joinTable
+     * @param array|null $joinColumn
      * @param int $limit The maximum number of records to return (optional, default is 0 for no limit).
      * @param string $orderBy The column to order the results by (optional).
      * @param string $order The order in which to sort the results (optional, default).
      * @return array An array of selected records.
      */
-    public function select(
+    public static function select(
         string $table,
         array $conditions = [],
-        ?array $columns = ["*"],
         ?string $joinType = "",
         ?string $joinTable = "",
         ?array $joinColumn = [],
@@ -41,7 +33,8 @@ class DatabaseConnect
         string $orderBy = "",
         string $order = "",
     ): array {
-        $sql = "SELECT " . implode(", ", $columns) . " FROM " . $table;
+        $pdo = self::connect();
+        $sql = "SELECT * FROM " . $table;
         if (!empty($joinType)) {
             $joins = [];
             foreach ($joinColumn as $column) {
@@ -58,8 +51,7 @@ class DatabaseConnect
         if ($limit > 0) {
             $sql .= " LIMIT " . $limit;
         }
-        $stmt = $this->pdo->prepare($sql);
-        // dd($stmt);
+        $stmt = $pdo->prepare($sql);
         $stmt->execute(array_values($conditions));
         return $stmt->fetchAll();
     }
@@ -70,15 +62,17 @@ class DatabaseConnect
      *
      * @param string $table The name of the table to insert into.
      * @param array $data The data to insert.
-     * @return int The ID of the inserted record.
+     * @return bool Returns TRUE when executed properly.
      */
-    public function insert(string $table, array $data): int
+    public static  function insert(string $table, array $data): bool
     {
+        $pdo = self::connect();
+
         $sql = "INSERT INTO " . $table . " (" . implode(", ", array_keys($data)) . ") VALUES (" . implode(", ", array_fill(0, count($data), "?")) . ")";
 
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute(array_values($data));
-        return $this->pdo->lastInsertId();
+        $stmt = $pdo->prepare($sql);
+
+        return $stmt->execute(array_values($data));
     }
 
 
@@ -88,17 +82,19 @@ class DatabaseConnect
      * @param string $table The name of the table to update.
      * @param array $data The data to update.
      * @param array $conditions The conditions to apply to the update.
-     * @return int The number of affected rows.
+     * @return bool Returns TRUE when executed properly.
      */
-    public function update(string $table, array $data, array $conditions): int
+    public static function update(string $table, array $data, array $conditions): bool
     {
+        $pdo = self::connect();
+
         $sql = "UPDATE " . $table . " SET " . implode(" = ?, ", array_keys($data)) . " = ?";
         if (!empty($conditions)) {
-            $sql .= " WHERE " . implode(" = ?, ", array_keys($conditions)) . " = ?";
+            $sql .= " WHERE " . implode(" = ? and ", array_keys($conditions)) . " = ?";
         }
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute(array_merge(array_values($data), array_values($conditions)));
-        return $stmt->rowCount();
+        $stmt = $pdo->prepare($sql);
+
+        return $stmt->execute(array_merge(array_values($data), array_values($conditions)));
     }
 
 
@@ -106,17 +102,16 @@ class DatabaseConnect
      * Deletes records from the specified table based on the given conditions.
      *
      * @param string $table The name of the table to delete from.
-     * @param array $conditions The conditions to apply to the delete.
-     * @return int The number of affected rows.
+     * @param array $conditions The conditions to apply to the delete query.
+     * @return bool Returns TRUE when executed properly
      */
-    public function delete(string $table, array $conditions): int
+    public static function delete(string $table, array $conditions): bool
     {
+        $pdo = self::connect();
         $sql = "DELETE FROM " . $table . " WHERE " .
             implode(" = ?, ", array_keys($conditions)) . " = ?";
-        $stmt = $this->pdo->prepare($sql);
-        // dd($sql);
-        $stmt->execute(array_values($conditions));
-        return $stmt->rowCount();
+        $stmt = $pdo->prepare($sql);
+        return $stmt->execute(array_values($conditions));
     }
 
 
@@ -127,10 +122,36 @@ class DatabaseConnect
      * @param array $bindings The parameter bindings for the query (default: []).
      * @return array An array of query results.
      */
-    public function query(string $sql, array $bindings = []): array
+    public static function query(string $sql, array $bindings = []): array
     {
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute($bindings);
+        $pdo = self::connect();
+        $stmt = $pdo->prepare($sql);
+        //        dd($stmt);
+        !empty($bindings) ?  $stmt->execute($bindings) : $stmt->execute();
+
         return $stmt->fetchAll();
+    }
+
+
+    public static function all(string $table): false|array
+    {
+        $pdo = self::connect();
+
+        $sql = "SELECT * FROM $table";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public static function connect(): PDO
+    {
+        try {
+            $pdo = new PDO('mysql:host=localhost;dbname=loginpage;charset=utf8mb4', "root");
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            return $pdo;
+        } catch (PDOException $e) {
+            Validator::addErrors(["database" => ["An error occurred while connecting to Database"]]);
+            header("Location: /login");
+        }
     }
 }
